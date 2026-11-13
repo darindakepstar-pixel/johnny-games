@@ -33,7 +33,10 @@ button{font:inherit;color:inherit;border:0;cursor:pointer}
 .card p{margin:0;font-size:13px;color:var(--soft);font-weight:600}
 .card .best{position:absolute;right:10px;top:10px;font-size:11px;background:rgba(255,255,255,.7);border-radius:99px;padding:2px 8px;color:var(--plum)}
 .card .best:empty{display:none}
-.c1{background:var(--peach-l)}.c2{background:var(--mint-l)}.c3{background:var(--butter-l)}.c4{background:var(--lilac)}.c5{background:var(--peach-l)}.c6{background:var(--mint-l)}
+.c1{background:var(--peach-l)}.c2{background:var(--mint-l)}.c3{background:var(--butter-l)}.c4{background:var(--lilac)}.c5{background:var(--peach-l)}.c6{background:var(--mint-l)}.c7{background:var(--lilac)}
+.card.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;min-height:104px}
+.card.wide .ico{font-size:40px}
+.card.wide .txt{flex:1}
 .foot{margin-top:18px;text-align:center;font-size:13px;color:var(--soft);font-weight:600}
 .foot a{color:var(--plum)}
 
@@ -53,6 +56,13 @@ button{font:inherit;color:inherit;border:0;cursor:pointer}
 .stage{flex:1;display:flex;flex-direction:column;justify-content:center}
 .shake{animation:sh .3s}
 @keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* Шульте */
+/* спринт (умное чтение) */
+.stext{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px 16px;background:#fff;border-radius:28px;margin-bottom:14px;font:800 21px/1.4 "Nunito",sans-serif;color:var(--ink)}
+.stext.small{font-size:17px;font-weight:700;line-height:1.45}
+.stext.q{font:700 19px/1.35 "Unbounded",sans-serif;min-height:110px}
+.opts button.solo{grid-column:1/-1}
 
 /* Шульте */
 .sgrid{display:grid;gap:6px}
@@ -108,6 +118,7 @@ button{font:inherit;color:inherit;border:0;cursor:pointer}
     <button class="card c4" data-go="hidden"><span class="best" id="b-hidden"></span><span class="ico">🔍</span><h3>Слово-невидимка</h3><p>Найди слово среди букв</p></button>
     <button class="card c5" data-go="memory"><span class="best" id="b-memory"></span><span class="ico">🧠</span><h3>Запомни картинки</h3><p>Тренируем память</p></button>
     <button class="card c6" data-go="tongue"><span class="ico">👅</span><h3>Скороговорка дня</h3><p>Скажи три раза быстро</p></button>
+    <button class="card c7 wide" data-go="sprint"><span class="best" id="b-sprint"></span><span class="ico">📖</span><div class="txt"><h3>Умное чтение</h3><p>Прочитай как можно быстрее и пойми смысл</p></div></button>
   </div>
   <p class="foot">Игры от Ирины Крючковой — педагога по скорочтению и развитию мозга.<br><a href="#" id="signup">Записаться на занятия</a></p>
 </section>
@@ -167,6 +178,17 @@ button{font:inherit;color:inherit;border:0;cursor:pointer}
   </div>
 </section>
 
+<!-- СПРИНТ (УМНОЕ ЧТЕНИЕ) -->
+<section class="screen" id="sprint">
+  <div class="top"><button class="back" data-home>&#8592; Назад</button><h2>Умное чтение</h2></div>
+  <div class="seg" id="sp-mode"><button data-m="kid" class="on">Для малышей</button><button data-m="school">Для школьников</button></div>
+  <p class="rule">Читай текст, пока бежит полоска. Понял смысл &#8212; жми <b>&#171;Прочитал!&#187;</b> сразу, не дожидаясь конца полоски. Потом ответь на вопрос.</p>
+  <div class="hud"><span><b id="sp-n">1</b> / 8</span><span>Понял: <b id="sp-ok">0</b></span><span>&#9201; <b id="sp-time">0,0</b></span></div>
+  <div class="timerbar" id="sp-bar"><i></i></div>
+  <div class="stage"><div class="stext" id="sp-text"></div><div class="opts" id="sp-opts"></div>
+  <button class="big" id="sp-skip">Прочитал!</button></div>
+</section>
+
 <!-- РЕЗУЛЬТАТ -->
 <section class="screen res" id="result">
   <img src="johnny-medal.jpg" alt="Джонни с медалью">
@@ -202,8 +224,8 @@ function saveBest() {
 }
 function paintBest() {
   const map = { schulte: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '', stroop: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '',
-    flash: k => best[k] ? '🏆 ' + best[k] + ' мс' : '', hidden: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '', memory: k => best[k] ? '🏆 ур. ' + best[k] : '' };
-  for (const g in map) { const v = map[g](g === 'schulte' ? 'schulte' + sN : g === 'stroop' ? 'stroop' + stMode : g); const el = $('b-' + g); if (el) el.textContent = v; }
+    flash: k => best[k] ? '🏆 ' + best[k] + ' мс' : '', hidden: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '', memory: k => best[k] ? '🏆 ур. ' + best[k] : '', sprint: k => best[k] ? '🏆 ' + best[k] + ' сл/мин' : '' };
+  for (const g in map) { const v = map[g](g === 'schulte' ? 'schulte' + sN : g === 'stroop' ? 'stroop' + stMode : g === 'sprint' ? 'sprint' + spMode : g); const el = $('b-' + g); if (el) el.textContent = v; }
 }
 
 /* --- навигация --- */
@@ -220,7 +242,7 @@ $('signup').onclick = e => { e.preventDefault(); const url = 'https://vk.me/uniq
 $('r-again').onclick = () => againFn && againFn();
 let timers = [];
 function stopAll() { timers.forEach(t => { clearInterval(t); clearTimeout(t); }); timers = []; }
-function start(g) { stopAll(); ({ schulte: startSchulte, stroop: startStroop, flash: prepFlash, hidden: startHidden, memory: prepMemory, tongue: startTongue })[g](); show(g); }
+function start(g) { stopAll(); ({ schulte: startSchulte, stroop: startStroop, flash: prepFlash, hidden: startHidden, memory: prepMemory, tongue: startTongue, sprint: startSprint })[g](); show(g); }
 
 function finish(title, text, stars, bestLine, again) {
   stopAll();
@@ -407,6 +429,90 @@ function memCheck() {
     if (perfect) { if (!best.memory || mLvl > best.memory) { best.memory = mLvl; saveBest(); } mLvl++; memIdle(); $('m-rule').innerHTML = `Верно! Теперь <b>${memK()} картинки</b>. Справишься?`; }
     else finish('Отличная тренировка!', `Ты дошёл до уровня ${mLvl} и запомнил ${right} из ${mShown.length} картинок.`, mLvl >= 5 ? 3 : mLvl >= 3 ? 2 : 1, best.memory ? `Рекорд: уровень ${best.memory}` : '', () => start('memory'));
   }, 1400));
+}
+
+/* ===== Умное чтение: скорость + понимание ===== */
+const SPRINT = {
+  kid: [
+    {t: 'У рыжей кошки пушистый хвост.', q: 'Что у кошки пушистое?', a: ['хвост', 'лапы', 'усы']},
+    {t: 'Мальчик нашёл под ёлкой белый гриб.', q: 'Кто нашёл гриб?', a: ['мальчик', 'белка', 'ёжик']},
+    {t: 'Пёс Джонни любит грызть сладкую косточку.', q: 'Что любит Джонни?', a: ['косточку', 'машинку', 'шапку']},
+    {t: 'В синей чашке остыл горячий чай.', q: 'Что было в чашке?', a: ['чай', 'сок', 'компот']},
+    {t: 'Осенью журавли улетают в тёплые края.', q: 'Куда улетают журавли?', a: ['в тёплые края', 'в тёмный лес', 'на высокий дом']},
+    {t: 'Мама испекла вкусный яблочный пирог.', q: 'Какой пирог испекла мама?', a: ['яблочный', 'мясной', 'творожный']},
+    {t: 'Маленький щенок спрятался в тёплой коробке.', q: 'Где спрятался щенок?', a: ['в коробке', 'под мостом', 'в сарае']},
+    {t: 'Летом ребята катались на новых велосипедах.', q: 'На чём катались ребята?', a: ['на велосипедах', 'на санках', 'на лодке']}
+  ],
+  school: [
+    {t: 'В четверг весь класс ходил в обсерваторию. Там ребятам показали старый телескоп с длинной медной трубой.', q: 'Что показали ребятам в обсерватории?', a: ['телескоп', 'глобус', 'микроскоп']},
+    {t: 'Пёс Джонни нашёл в парке старый мяч. Он понёс его не домой, а прямо к будке сторожа дяди Вани.', q: 'Куда Джонни отнёс мяч?', a: ['к будке сторожа', 'домой', 'в школьный класс']},
+    {t: 'Чтобы построить плот, Дима взял восемь брёвен, а его сестра Аня — вдвое меньше.', q: 'Сколько брёвен взяла Аня?', a: ['четыре', 'восемь', 'шестнадцать']},
+    {t: 'К утру озеро покрылось тонкой корочкой льда. Папа сказал, что коньки придётся отнести обратно в сарай.', q: 'Почему коньки отправили в сарай?', a: ['лёд на озере был ещё тонким', 'коньки оказались малы', 'на озере поднялась волна']},
+    {t: 'В корзине лежало двенадцать грибов. Четыре из них оказались поганками и полетели в мусор, а половину оставшихся мама пустила на суп.', q: 'Сколько грибов мама пустила на суп?', a: ['четыре', 'шесть', 'восемь']},
+    {t: 'Спектакль начинался в семь часов. Антон вышел из дома в шесть тридцать и шёл до театра ровно тридцать минут.', q: 'Во сколько Антон пришёл к театру?', a: ['в семь часов', 'в шесть тридцать', 'в семь тридцать']},
+    {t: 'Хамелеон меняет цвет не от страха, а из-за освещения и настроения.', q: 'Почему меняется цвет хамелеона?', a: ['из-за освещения и настроения', 'только от сильного страха', 'когда он очень проголодался']},
+    {t: 'Поезд пришёл на перрон ещё засветло, хотя по расписанию его ждали только к ночи. Оказалось, машинист нигде лишней минуты не стоял.', q: 'Почему поезд приехал так рано?', a: ['машинист нигде не стоял лишних минут', 'расписание переписали утром', 'пассажиры торопили машиниста']}
+  ]
+};
+let spMode = 'kid', spI = 0, spOk = 0, spWords = 0, spMs = 0, spPool = [], spT0 = 0, spCur = 0, spDone = true, spIv = null, spTo = null;
+document.querySelectorAll('#sp-mode button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#sp-mode button').forEach(x => x.classList.toggle('on', x === b)); spMode = b.dataset.m; startSprint();
+});
+function spStop() { clearInterval(spIv); clearTimeout(spTo); }
+function startSprint() {
+  spStop(); stopAll();
+  spI = 0; spOk = 0; spWords = 0; spMs = 0; spDone = false; spPool = shuffle(SPRINT[spMode]);
+  $('sp-n').textContent = 1; $('sp-ok').textContent = 0; $('sp-time').textContent = '0,0';
+  spRound();
+}
+function spRound() {
+  const it = spPool[spI]; spCur = it.t.replace(/[.,]/g, ' ').split(/\s+/).filter(Boolean).length;
+  const ms = Math.max(4500, Math.min(14000, 2600 + spCur * 480));
+  spT0 = Date.now(); spDone = false;
+  const box = $('sp-text'); box.className = 'stext' + (spMode === 'school' ? ' small' : ''); box.textContent = it.t;
+  $('sp-opts').innerHTML = ''; $('sp-skip').style.display = 'block'; $('sp-bar').style.display = 'block';
+  const bar = $('sp-bar').firstElementChild; bar.style.width = '100%';
+  spIv = setInterval(() => {
+    bar.style.width = Math.max(0, 1 - (Date.now() - spT0) / ms) * 100 + '%';
+    $('sp-time').textContent = fmt(spMs + (Date.now() - spT0));
+  }, 60);
+  spTo = setTimeout(spReveal, ms);
+}
+function spReveal() {
+  if (spDone) return; spDone = true; spStop();
+  spMs += Math.max(Date.now() - spT0, spCur * 400); spWords += spCur;
+  $('sp-time').textContent = fmt(spMs); $('sp-skip').style.display = 'none'; $('sp-bar').style.display = 'none';
+  const it = spPool[spI];
+  const box = $('sp-text'); box.className = 'stext q'; box.textContent = it.q;
+  const o = $('sp-opts'); o.innerHTML = '';
+  shuffle(it.a).forEach(ans => {
+    const b = document.createElement('button'); b.textContent = ans;
+    b.onclick = () => {
+      const ok = ans === it.a[0];
+      b.classList.add(ok ? 'ok' : 'bad'); haptic(ok ? 'ok' : 'bad');
+      if (!ok) [...o.children].find(x => x.textContent === it.a[0]).classList.add('ok');
+      [...o.children].forEach(x => x.onclick = null);
+      if (ok) { spOk++; $('sp-ok').textContent = spOk; }
+      timers.push(setTimeout(() => {
+        spI++;
+        if (spI >= spPool.length) spFinish();
+        else { $('sp-n').textContent = spI + 1; spRound(); }
+      }, 1100));
+    };
+    o.appendChild(b);
+  });
+  const kids = [...o.children]; if (kids.length === 3) kids[2].classList.add('solo');
+  haptic();
+}
+$('sp-skip').onclick = spReveal;
+function spFinish() {
+  const n = spPool.length, wpm = Math.round(spWords / Math.max(spMs, 1) * 60000);
+  const key = 'sprint' + spMode, rec = wpm >= 15 && wpm <= 160 && (!best[key] || wpm > best[key]);
+  if (rec) { best[key] = wpm; saveBest(); }
+  const st = spOk >= n ? 3 : spOk >= n - 2 ? 2 : 1;
+  finish(rec ? 'Новый рекорд!' : spOk >= n - 2 ? 'Читаешь и думаешь!' : 'Хорошая тренировка!',
+    n + ' текстов, чистое чтение — ' + fmt(spMs) + ' с. Скорость примерно ' + wpm + ' слов в минуту. Понял верно ' + spOk + ' из ' + n + '.',
+    st, best[key] ? 'Твой рекорд: ' + best[key] + ' слов в минуту' : '', () => start('sprint'));
 }
 
 /* ===== Скороговорки ===== */
