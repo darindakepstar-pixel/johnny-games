@@ -8,7 +8,7 @@
 :root{
   --sat:env(safe-area-inset-top); --sab:env(safe-area-inset-bottom);
   --bg:#FBF3E7; --card:#FFFFFF; --ink:#3E3226; --mut:#9A8B78;
-  --brand:#F08A5D; --brand2:#F7B267; --gold:#FFC93C; --ok:#8FD694; --sea:#8EC5E8;
+  --brand:#F08A5D; --gold:#FFC93C; --ok:#8FD694; --sea:#8EC5E8;
   --r:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -32,7 +32,8 @@ h1{font-size:24px} h2{font-size:19px;margin-bottom:10px}
   box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .tile b{display:block;font-size:14px;margin-top:6px}
 .tile small{color:var(--mut);font-size:11px}
-svg{width:26px;height:26px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+svg{width:26px;height:26px;stroke:var(--brand);fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
 nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;
   border-top:1px solid #EFE3D2;padding:8px 6px calc(8px + var(--sab));z-index:50}
 nav button{flex:1;background:none;border:none;font:inherit;font-size:11px;color:var(--mut);
@@ -41,20 +42,33 @@ nav button.on{color:var(--brand);font-weight:600}
 nav svg{width:22px;height:22px;stroke:currentColor}
 .bar{height:8px;border-radius:8px;background:#F0E4D2;overflow:hidden;margin:10px 0 4px}
 .bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .5s}
-.island{position:relative;height:110px;border-radius:var(--r);overflow:hidden;
-  background:linear-gradient(var(--sea) 0 58%,var(--ok) 58%)}
-.dog{position:absolute;bottom:10px;left:-40px;width:40px;height:40px;image-rendering:pixelated;
-  animation:walk 14s linear infinite}
-.dog::after{content:"🐕";font-size:30px;position:absolute;bottom:0}
-@keyframes walk{to{left:100%}}
 .msg{background:#FFF6E9;border-radius:12px;padding:12px;font-size:14px;min-height:46px;margin:10px 0}
 .shulte{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
-.shulte button{aspect-ratio:1;border:none;border-radius:12px;background:#fff;font-size:18px;font-weight:700;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);color:var(--ink)}
+.shulte button{aspect-ratio:1;border:none;border-radius:12px;background:#fff;font-size:18px;
+  font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.08);color:var(--ink)}
 .shulte button.ok{background:var(--ok);color:#fff}
-.slot{border:1.5px dashed #E3C9A8;border-radius:10px;padding:8px;font-size:11px;color:#A08A6D;margin:6px 0}
+.slot{border:1.5px dashed #E3C9A8;border-radius:10px;padding:8px;font-size:11px;
+  color:#A08A6D;margin:6px 0}
 .slot b{font-family:monospace;color:var(--brand)}
 .lock{opacity:.45}
+
+/* ===== ДЖОННИ: пиксельный кинг чарльз спаниель, бежит ===== */
+.island{position:relative;height:120px;border-radius:var(--r);overflow:hidden;
+  background:linear-gradient(var(--sea) 0 58%,var(--ok) 58%)}
+.dog{position:absolute;bottom:12px;left:-56px;width:56px;height:56px;
+  image-rendering:pixelated;animation:run 10s linear infinite}
+.dog svg{width:100%;height:100%;overflow:visible}
+.dog .f1{animation:step .18s steps(1) infinite alternate}
+.dog .f2{animation:step .18s steps(1) infinite alternate-reverse}
+.dog .ear{transform-origin:12px 6px;animation:ear .3s ease-in-out infinite alternate}
+.dog .tail{transform-origin:4px 8px;animation:tail .2s ease-in-out infinite alternate}
+.dog .body{animation:bounce .18s steps(1) infinite alternate}
+@keyframes run{to{left:100%}}
+@keyframes step{from{transform:translateY(0)}to{transform:translateY(2px)}}
+@keyframes ear{from{transform:rotate(0)}to{transform:rotate(6deg)}}
+@keyframes tail{from{transform:rotate(0)}to{transform:rotate(-10deg)}}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-1px)}}
+@media (prefers-reduced-motion:reduce){.dog,.dog *{animation:none}}
 </style>
 </head>
 <body>
@@ -63,7 +77,38 @@ nav svg{width:22px;height:22px;stroke:currentColor}
 <!-- ДОМ -->
 <section class="screen on" id="home">
   <div class="card">
-    <div class="island"><div class="dog"></div></div>
+    <div class="island">
+      <div class="dog">
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <g class="body">
+            <rect x="4" y="7" width="8" height="4" fill="#C8763C"/>
+            <rect x="4" y="10" width="8" height="1" fill="#A85E2E"/>
+            <rect x="9" y="7" width="3" height="3" fill="#F7EFE3"/>
+            <rect x="10" y="3" width="4" height="4" fill="#C8763C"/>
+            <rect x="11" y="3" width="2" height="2" fill="#F7EFE3"/>
+            <rect x="13" y="5" width="2" height="2" fill="#F7EFE3"/>
+            <rect x="14" y="5" width="1" height="1" fill="#2E2A26"/>
+            <rect x="12" y="4" width="1" height="1" fill="#2E2A26"/>
+            <g class="ear">
+              <rect x="9" y="4" width="2" height="5" fill="#8E4A22"/>
+              <rect x="9" y="9" width="2" height="1" fill="#6E3A1A"/>
+            </g>
+            <g class="tail">
+              <rect x="2" y="6" width="3" height="2" fill="#C8763C"/>
+              <rect x="1" y="5" width="2" height="2" fill="#F7EFE3"/>
+            </g>
+          </g>
+          <g class="f1">
+            <rect x="5" y="11" width="2" height="3" fill="#8E4A22"/>
+            <rect x="10" y="11" width="2" height="3" fill="#8E4A22"/>
+          </g>
+          <g class="f2">
+            <rect x="6" y="11" width="2" height="2" fill="#8E4A22"/>
+            <rect x="9" y="11" width="2" height="3" fill="#8E4A22"/>
+          </g>
+        </svg>
+      </div>
+    </div>
     <h1 style="margin-top:12px">Путь с Джонни</h1>
     <div class="mut">Уровень <span id="lvl">1</span> · опыт <span id="xp">0</span>/100</div>
     <div class="bar"><i id="bar"></i></div>
@@ -124,8 +169,7 @@ nav svg{width:22px;height:22px;stroke:currentColor}
   <div class="mut">Настройки и раздел для родителей</div>
   <div class="card">
     <div class="row" style="justify-content:space-between">
-      <span>Звук</span>
-      <input type="checkbox" id="snd" checked>
+      <span>Звук</span><input type="checkbox" id="snd" checked>
     </div>
     <hr style="border:none;border-top:1px solid #F0E4D2;margin:12px 0">
     <div>Родителям: сколько будет <b>2 × 3</b>?</div>
@@ -135,24 +179,32 @@ nav svg{width:22px;height:22px;stroke:currentColor}
   </div>
   <div class="card">
     <b>Как добавить озвучку</b>
-    <div class="slot">Положи файлы в папку <b>www/audio/</b> с именами:
-      <b>ui_hello.mp3</b>, <b>story1_p01.mp3</b>, <b>game_shulte_win.mp3</b></div>
-    <div class="slot">Картинки — в <b>www/img/</b>: <b>johnny_walk_1.png</b>, <b>friend_pulya.png</b></div>
+    <div class="slot">Файлы в <b>www/audio/</b>: <b>ui_hello.mp3</b>,
+      <b>story1_p01.mp3</b>, <b>game_shulte_win.mp3</b></div>
+    <div class="slot">Картинки в <b>www/img/</b>: <b>johnny_walk_1.png</b>,
+      <b>friend_pulya.png</b></div>
   </div>
 </section>
 
 </div>
 
 <nav>
-  <button class="on" data-g="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg>Дом</button>
-  <button data-g="map" onclick="go('map')"><svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/></svg>Карта</button>
-  <button data-g="games" onclick="go('games')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="12" rx="3"/><path d="M8 12h4M10 10v4M16 12h.01M18 10v0"/></svg>Игры</button>
-  <button data-g="friends" onclick="go('friends')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20a6 6 0 0112 0M14 20a5 5 0 017 0"/></svg>Друзья</button>
-  <button data-g="more" onclick="go('more')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>Ещё</button>
+  <button class="on" data-g="home" onclick="go('home')">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg>Дом</button>
+  <button data-g="map" onclick="go('map')">
+    <svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/></svg>Карта</button>
+  <button data-g="games" onclick="go('games')">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="12" rx="3"/>
+      <path d="M8 12h4M10 10v4M16 12h.01"/></svg>Игры</button>
+  <button data-g="friends" onclick="go('friends')">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/>
+      <path d="M3 20a6 6 0 0112 0M14 20a5 5 0 017 0"/></svg>Друзья</button>
+  <button data-g="more" onclick="go('more')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>Ещё</button>
 </nav>
 
 <script>
-/* ---------- данные ---------- */
+/* ================= ДАННЫЕ ================= */
 const CH=[
  {t:"Джонни и потерянная цифра",loc:"Остров Чисел",f:"pulya",p:[
  "Жил-был на острове пёс по имени Джонни. Любил он считать всё на свете: облака, камешки, рыбок.",
@@ -202,9 +254,11 @@ const CH=[
  "Внутри не было сокровищ. Была карта. «Настоящее сокровище — это путь», — сказал Джонни."]}];
 
 const FR={pulya:"Пуля",sova:"Бабушка Сова",top:"Топ",shur:"Шур",ryzh:"Рыж"};
-const GM=[["shulte","Таблица Шульте","Найди числа по порядку"],["colors","Раскрась по цифрам","Скоро"],["sounds","Звуки леса","Скоро"],["memory","Что пропало","Скоро"],["words","Собери слово","Скоро"]];
+const GM=[["shulte","Таблица Шульте","Найди числа по порядку"],
+ ["colors","Раскрась по цифрам","Скоро"],["sounds","Звуки леса","Скоро"],
+ ["memory","Что пропало","Скоро"],["words","Собери слово","Скоро"]];
 
-/* ---------- состояние ---------- */
+/* ================= СОСТОЯНИЕ ================= */
 let S={xp:0,lvl:1,open:1,read:[],fr:[]};
 try{S=Object.assign(S,JSON.parse(localStorage.getItem("johnny")||"{}"))}catch(e){}
 const save=()=>localStorage.setItem("johnny",JSON.stringify(S));
@@ -217,50 +271,68 @@ function go(id){
   if(id==="friends")friends();
   if(id==="games")games();
 }
-function xp(n){S.xp+=n;if(S.xp>=100){S.xp-=100;S.lvl++}
+
+function xp(n){
+  S.xp+=n;
+  if(S.xp>=100){S.xp-=100;S.lvl++;}
   document.getElementById("lvl").textContent=S.lvl;
   document.getElementById("xp").textContent=S.xp;
-  document.getElementById("bar").style.width=S.xp+"%";save();}
-function say(f,t){document.getElementById("stM").textContent=" "+t;
-  console.log("[audio slot]",f);}
+  document.getElementById("bar").style.width=S.xp+"%";
+  save();
+}
 
-/* ---------- карта ---------- */
+function say(file,text){
+  document.getElementById("stM").textContent=" "+text;
+  console.log("[audio slot]",file);
+}
+
+/* ================= КАРТА ================= */
 function map(){
   document.getElementById("chs").innerHTML=CH.map((c,i)=>{
     const locked=i+1>S.open;
     return `<div class="card ${locked?'lock':''}" ${locked?'':`onclick="st(${i})"`}>
       <div class="row" style="justify-content:space-between">
-        <div><b>${i+1}. ${c.t}</b><div class="mut" style="margin:2px 0 0">${c.loc}</div></div>
+        <div><b>${i+1}. ${c.t}</b>
+          <div class="mut" style="margin:2px 0 0">${c.loc}</div></div>
         <div style="font-size:20px">${locked?'🔒':(S.read.includes(i)?'✅':'▶️')}</div>
-      </div></div>`}).join("");
+      </div></div>`;
+  }).join("");
 }
 
-/* ---------- история ---------- */
+/* ================= ИСТОРИЯ ================= */
 let ci=0,pi=0;
-function st(i){ci=i;pi=0;document.getElementById("stT").textContent=CH[i].t;pg();go("story");}
+function st(i){
+  ci=i;pi=0;
+  document.getElementById("stT").textContent=CH[i].t;
+  pg();go("story");
+}
 function pg(){
   const c=CH[ci];
   if(pi>=c.p.length){
-    if(!S.read.includes(ci)){S.read.push(ci);
-      if(!S.fr.includes(c.f)){S.fr.push(c.f);say("friend_joined","У нас новый друг: "+FR[c.f]);}}
-    xp(30);map();go("map");return;}
+    if(!S.read.includes(ci)){
+      S.read.push(ci);
+      if(!S.fr.includes(c.f)){S.fr.push(c.f);
+        say("friend_joined","У нас новый друг: "+FR[c.f]);}
+    }
+    xp(30);map();go("map");return;
+  }
   document.getElementById("stB").textContent=c.p[pi];
   say("story"+(ci+1)+"_p"+String(pi+1).padStart(2,"0"),c.p[pi]);
   pi++;
 }
 
-/* ---------- игры ---------- */
+/* ================= ИГРЫ ================= */
 function games(){
   document.getElementById("gl").innerHTML=GM.map(g=>
     `<div class="tile" ${g[0]==="shulte"?`onclick="go('shulte')`:'style="opacity:.5"'}>
-     <b>${g[1]}</b><small>${g[2]}</small></div>`).join("");
+      <b>${g[1]}</b><small>${g[2]}</small></div>`).join("");
 }
 
-/* ---------- Шульте ---------- */
-let shN=0,shT=0;
+/* ================= ШУЛЬТЕ ================= */
+let shN=1,shT=0;
 function shStart(){
-  const n=16,shN_=n;shN=1;shT=Date.now();
-  const a=[...Array(n).keys()].map(i=>i+1).sort(()=>Math.random()-.5);
+  shN=1;shT=Date.now();
+  const a=[...Array(16).keys()].map(i=>i+1).sort(()=>Math.random()-.5);
   document.getElementById("shG").innerHTML=a.map(v=>
     `<button onclick="shTap(this,${v})">${v}</button>`).join("");
   document.getElementById("shM").textContent="Ищи число 1";
@@ -268,26 +340,29 @@ function shStart(){
 function shTap(el,v){
   if(v!==shN){document.getElementById("shM").textContent="Не то. Ищи "+shN;return;}
   el.classList.add("ok");shN++;
-  if(shN>16){const s=((Date.now()-shT)/1000).toFixed(1);
-    document.getElementById("shM").textContent="Готово! Время "+s+" с";xp(20);}
-  else document.getElementById("shM").textContent="Ищи число "+shN;
+  if(shN>16){
+    const s=((Date.now()-shT)/1000).toFixed(1);
+    document.getElementById("shM").textContent="Готово! Время "+s+" с";
+    xp(20);
+  } else document.getElementById("shM").textContent="Ищи число "+shN;
 }
 
-/* ---------- друзья ---------- */
+/* ================= ДРУЗЬЯ ================= */
 function friends(){
   document.getElementById("fc").textContent=S.fr.length+" из 5";
   document.getElementById("fg").innerHTML=Object.entries(FR).map(([k,n])=>
     `<div class="tile ${S.fr.includes(k)?'':'lock'}"><b>${n}</b>
-     <small>${S.fr.includes(k)?'друг':'пройди историю'}</small></div>`).join("");
+      <small>${S.fr.includes(k)?'друг':'пройди историю'}</small></div>`).join("");
 }
 
-/* ---------- родители ---------- */
+/* ================= РОДИТЕЛИ ================= */
 function par(){
-  if(document.getElementById("pc").value=="6"){alert("Раздел для родителей (заготовка)");}
-  else alert("Неверно");
+  if(document.getElementById("pc").value=="6"){
+    alert("Раздел для родителей (заготовка)");
+  } else alert("Неверно");
 }
 
-/* ---------- старт ---------- */
+/* ================= СТАРТ ================= */
 document.getElementById("lvl").textContent=S.lvl;
 document.getElementById("xp").textContent=S.xp;
 document.getElementById("bar").style.width=S.xp+"%";
