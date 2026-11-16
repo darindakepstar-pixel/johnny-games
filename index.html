@@ -6,338 +6,292 @@
 <title>Путь с Джонни</title>
 <style>
 :root{
-  /* ===== SAFE AREA: чёлка iPhone и статус-бар Android ===== */
-  --sat: env(safe-area-inset-top);
-  --sab: env(safe-area-inset-bottom);
-  --sal: env(safe-area-inset-left);
-  --sar: env(safe-area-inset-right);
-
-  --c-bg:#FDF6EC;
-  --c-sand:#F7E8C9;
-  --c-sea:#7FC4E8;
-  --c-grass:#8FD694;
-  --c-wood:#C89B6C;
-  --c-text:#4A3B2A;
-  --c-accent:#FF8A5B;
-  --c-gold:#FFC93C;
-  --radius:20px;
-  --font: -apple-system, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
+  --sat:env(safe-area-inset-top); --sab:env(safe-area-inset-bottom);
+  --bg:#FBF3E7; --card:#FFFFFF; --ink:#3E3226; --mut:#9A8B78;
+  --brand:#F08A5D; --brand2:#F7B267; --gold:#FFC93C; --ok:#8FD694; --sea:#8EC5E8;
+  --r:18px;
 }
-
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{
-  font-family:var(--font);
-  background:var(--c-bg);
-  color:var(--c-text);
-  overflow-x:hidden;
-  user-select:none;
-  -webkit-user-select:none;
-}
-
-/* ===== ЭКРАН ===== */
-.screen{
-  display:none;
-  min-height:100vh;
-  padding:calc(16px + var(--sat)) calc(16px + var(--sar)) calc(80px + var(--sab)) calc(16px + var(--sal));
-  animation:fade .35s ease;
-}
-.screen.active{display:block;}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-h1{font-size:26px;margin-bottom:6px;}
-h2{font-size:20px;margin-bottom:12px;}
-.sub{font-size:14px;opacity:.65;margin-bottom:18px;}
-
-/* ===== НИЖНЯЯ НАВИГАЦИЯ ===== */
-nav{
-  position:fixed;bottom:0;left:0;right:0;
-  display:flex;justify-content:space-around;
-  padding:10px 8px calc(10px + var(--sab));
-  background:#fff;
-  border-top:1px solid rgba(0,0,0,.06);
-  z-index:100;
-}
-nav button{
-  background:none;border:none;font-family:inherit;
-  font-size:12px;color:var(--c-text);opacity:.5;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  min-width:64px;padding:6px;
-}
-nav button.active{opacity:1;color:var(--c-accent);font-weight:600;}
-nav button .ico{font-size:20px;}
-
-/* ===== КАРТОЧКИ ===== */
-.card{
-  background:#fff;border-radius:var(--radius);
-  padding:18px;margin-bottom:14px;
-  box-shadow:0 4px 14px rgba(0,0,0,.06);
-}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.tile{
-  background:#fff;border-radius:var(--radius);padding:14px;
-  box-shadow:0 3px 10px rgba(0,0,0,.05);
-  text-align:center;
-}
-.tile .emoji{font-size:34px;display:block;margin-bottom:6px;}
-.tile small{opacity:.6;font-size:11px;}
-
-.btn{
-  display:inline-block;border:none;font-family:inherit;
-  background:var(--c-accent);color:#fff;
-  padding:14px 22px;border-radius:14px;font-size:16px;font-weight:600;
-  width:100%;margin-top:10px;
-}
-.btn.ghost{background:#fff;color:var(--c-text);border:2px solid var(--c-sand);}
-.btn:active{transform:scale(.97);}
-
-/* ===== XP ===== */
-.xp-bar{height:10px;background:var(--c-sand);border-radius:10px;overflow:hidden;margin:8px 0 14px;}
-.xp-fill{height:100%;width:0;background:var(--c-gold);transition:width .6s;}
-
-/* ===== ПИКСЕЛЬНЫЙ ДЖОННИ ===== */
-.island{
-  position:relative;height:120px;border-radius:var(--radius);
-  background:linear-gradient(180deg,var(--c-sea) 0 55%,var(--c-grass) 55%);
-  overflow:hidden;margin-bottom:16px;
-}
-.johnny-pixel{
-  position:absolute;bottom:14px;left:0;
-  width:48px;height:48px;
-  image-rendering:pixelated;
-  animation:walk 12s linear infinite;
-}
-/* пока нет картинки — рисуем CSS-джонни */
-.johnny-pixel::before{
-  content:"";font-size:34px;position:absolute;bottom:0;
-  animation:bob .4s steps(2) infinite;
-}
-@keyframes walk{from{left:-50px}to{left:100%}}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-
-/* ===== СЛОТЫ ПОД ФАЙЛЫ ===== */
-.slot{
-  border:2px dashed #E0B98A;border-radius:12px;
-  padding:10px;margin:8px 0;background:#FFF9EF;
-  font-size:12px;color:#8A7355;
-}
-.slot b{color:var(--c-accent);font-family:monospace;font-size:11px;}
-
-/* ===== ИГРЫ ===== */
-.shulte{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0;}
-.shulte div{
-  aspect-ratio:1;background:#fff;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-.shulte div.done{background:var(--c-grass);color:#fff;}
-
-.msg{
-  background:#FFF3E0;border-radius:12px;padding:12px;
-  margin:12px 0;font-size:14px;min-height:44px;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);
+  -webkit-user-select:none;user-select:none}
+.wrap{max-width:520px;margin:0 auto;padding:14px 14px calc(84px + var(--sab))}
+.screen{display:none;animation:in .3s ease}
+.screen.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h1{font-size:24px} h2{font-size:19px;margin-bottom:10px}
+.mut{color:var(--mut);font-size:13px;margin:4px 0 16px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.05)}
+.row{display:flex;gap:10px;align-items:center}
+.btn{border:none;font:inherit;font-weight:600;font-size:15px;width:100%;padding:14px;
+  border-radius:14px;background:var(--brand);color:#fff;margin-top:10px}
+.btn.alt{background:#fff;color:var(--ink);border:1.5px solid #EAD9C4;font-weight:500}
+.btn:active{transform:scale(.98)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border-radius:var(--r);padding:14px;text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.tile b{display:block;font-size:14px;margin-top:6px}
+.tile small{color:var(--mut);font-size:11px}
+svg{width:26px;height:26px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;
+  border-top:1px solid #EFE3D2;padding:8px 6px calc(8px + var(--sab));z-index:50}
+nav button{flex:1;background:none;border:none;font:inherit;font-size:11px;color:var(--mut);
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px}
+nav button.on{color:var(--brand);font-weight:600}
+nav svg{width:22px;height:22px;stroke:currentColor}
+.bar{height:8px;border-radius:8px;background:#F0E4D2;overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .5s}
+.island{position:relative;height:110px;border-radius:var(--r);overflow:hidden;
+  background:linear-gradient(var(--sea) 0 58%,var(--ok) 58%)}
+.dog{position:absolute;bottom:10px;left:-40px;width:40px;height:40px;image-rendering:pixelated;
+  animation:walk 14s linear infinite}
+.dog::after{content:"🐕";font-size:30px;position:absolute;bottom:0}
+@keyframes walk{to{left:100%}}
+.msg{background:#FFF6E9;border-radius:12px;padding:12px;font-size:14px;min-height:46px;margin:10px 0}
+.shulte{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.shulte button{aspect-ratio:1;border:none;border-radius:12px;background:#fff;font-size:18px;font-weight:700;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);color:var(--ink)}
+.shulte button.ok{background:var(--ok);color:#fff}
+.slot{border:1.5px dashed #E3C9A8;border-radius:10px;padding:8px;font-size:11px;color:#A08A6D;margin:6px 0}
+.slot b{font-family:monospace;color:var(--brand)}
+.lock{opacity:.45}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<!-- ============ ГЛАВНАЯ ============ -->
-<section class="screen active" id="s-home">
+<!-- ДОМ -->
+<section class="screen on" id="home">
   <div class="card">
-    <div class="island">
-      <div class="johnny-pixel" id="johnny"></div>
-    </div>
-    <h1>Путь с Джонни</h1>
-    <p class="sub">Уровень <span id="lvl">1</span> · XP <span id="xp">0</span>/<span id="xpMax">100</span></p>
-    <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
-    <button class="btn" onclick="go('s-map')">Продолжить приключение</button>
-    <button class="btn ghost" onclick="go('s-games')">Играть</button>
+    <div class="island"><div class="dog"></div></div>
+    <h1 style="margin-top:12px">Путь с Джонни</h1>
+    <div class="mut">Уровень <span id="lvl">1</span> · опыт <span id="xp">0</span>/100</div>
+    <div class="bar"><i id="bar"></i></div>
+    <button class="btn" onclick="go('map')">Продолжить приключение</button>
+    <button class="btn alt" onclick="go('games')">Играть</button>
   </div>
   <div class="grid">
-    <div class="tile"><span class="emoji"></span>Истории<small>5 глав</small></div>
-    <div class="tile"><span class="emoji"></span>Игры<small>5 игр</small></div>
-    <div class="tile"><span class="emoji"></span>Друзья<small id="frCount">0</small></div>
-    <div class="tile"><span class="emoji"></span>Награды<small>0</small></div>
+    <div class="tile" onclick="go('map')"><b>Истории</b><small>5 глав</small></div>
+    <div class="tile" onclick="go('games')"><b>Игры</b><small>5 игр</small></div>
+    <div class="tile" onclick="go('friends')"><b>Друзья</b><small id="fc">0 из 5</small></div>
+    <div class="tile" onclick="go('more')"><b>Награды</b><small>скоро</small></div>
   </div>
 </section>
 
-<!-- ============ КАРТА ============ -->
-<section class="screen" id="s-map">
+<!-- КАРТА -->
+<section class="screen" id="map">
   <h1>Карта острова</h1>
-  <p class="sub">Открывай главы по порядку</p>
-  <div id="chapters"></div>
+  <div class="mut">Главы открываются по порядку</div>
+  <div id="chs"></div>
 </section>
 
-<!-- ============ ИСТОРИЯ ============ -->
-<section class="screen" id="s-story">
-  <h2 id="storyTitle">История</h2>
-  <div class="card" id="storyText" style="min-height:120px;font-size:16px;line-height:1.6"></div>
-  <div class="msg" id="storyMsg"> Здесь прозвучит озвучка</div>
-  <button class="btn" onclick="nextPage()">Дальше →</button>
-  <button class="btn ghost" onclick="go('s-map')">← К карте</button>
+<!-- ИСТОРИЯ -->
+<section class="screen" id="story">
+  <h2 id="stT"></h2>
+  <div class="card" id="stB" style="min-height:110px;font-size:16px;line-height:1.65"></div>
+  <div class="msg" id="stM">Место для озвучки</div>
+  <button class="btn" onclick="pg()">Дальше →</button>
+  <button class="btn alt" onclick="go('map')">← К карте</button>
 </section>
 
-<!-- ============ ИГРЫ ============ -->
-<section class="screen" id="s-games">
+<!-- ИГРЫ -->
+<section class="screen" id="games">
   <h1>Игры</h1>
-  <p class="sub">5 игр на внимание, память и логику</p>
-  <div class="grid" id="gameList"></div>
+  <div class="mut">Внимание · память · логика</div>
+  <div class="grid" id="gl"></div>
 </section>
 
-<!-- ============ ИГРА: ШУЛЬТЕ ============ -->
-<section class="screen" id="s-shulte">
+<!-- ШУЛЬТЕ -->
+<section class="screen" id="shulte">
   <h2>Таблица Шульте</h2>
-  <p class="sub">Нажимай числа по порядку</p>
-  <div class="msg" id="shulteMsg">Нажми «Начать»</div>
-  <div class="shulte" id="shulteGrid"></div>
-  <button class="btn" onclick="startShulte()">Начать</button>
-  <button class="btn ghost" onclick="go('s-games')">← Назад</button>
+  <div class="mut">Нажимай числа по порядку, глядя в центр</div>
+  <div class="msg" id="shM">Нажми «Начать»</div>
+  <div class="shulte" id="shG"></div>
+  <button class="btn" onclick="shStart()">Начать</button>
+  <button class="btn alt" onclick="go('games')">← Назад</button>
 </section>
 
-<!-- ============ ДРУЗЬЯ ============ -->
-<section class="screen" id="s-friends">
+<!-- ДРУЗЬЯ -->
+<section class="screen" id="friends">
   <h1>Друзья Джонни</h1>
-  <p class="sub">Появляются по ходу историй</p>
-  <div class="grid" id="friendGrid"></div>
-  <button class="btn ghost" onclick="go('s-home')">← Домой</button>
+  <div class="mut">Появляются, когда проходишь истории</div>
+  <div class="grid" id="fg"></div>
 </section>
 
-<!-- ============ НАСТРОЙКИ ============ -->
-<section class="screen" id="s-set">
-  <h1>Настройки</h1>
+<!-- ЕЩЁ -->
+<section class="screen" id="more">
+  <h1>Ещё</h1>
+  <div class="mut">Настройки и раздел для родителей</div>
   <div class="card">
-    <label>Звук <input type="checkbox" id="sndToggle" checked style="float:right"></label>
-    <div style="margin-top:10px">Родительский раздел: <b>2 × 3 = ?</b></div>
-    <input type="number" id="pCheck" style="width:80px;padding:8px;border-radius:8px;border:1px solid #ddd" placeholder="?">
-    <button class="btn" onclick="parentCheck()">Войти</button>
+    <div class="row" style="justify-content:space-between">
+      <span>Звук</span>
+      <input type="checkbox" id="snd" checked>
+    </div>
+    <hr style="border:none;border-top:1px solid #F0E4D2;margin:12px 0">
+    <div>Родителям: сколько будет <b>2 × 3</b>?</div>
+    <input id="pc" type="number" inputmode="numeric" placeholder="?"
+      style="width:70px;padding:10px;border-radius:10px;border:1.5px solid #EAD9C4;margin-top:8px">
+    <button class="btn" onclick="par()">Войти</button>
   </div>
-  <button class="btn ghost" onclick="go('s-home')">← Домой</button>
+  <div class="card">
+    <b>Как добавить озвучку</b>
+    <div class="slot">Положи файлы в папку <b>www/audio/</b> с именами:
+      <b>ui_hello.mp3</b>, <b>story1_p01.mp3</b>, <b>game_shulte_win.mp3</b></div>
+    <div class="slot">Картинки — в <b>www/img/</b>: <b>johnny_walk_1.png</b>, <b>friend_pulya.png</b></div>
+  </div>
 </section>
 
-<!-- ============ НАВИГАЦИЯ ============ -->
+</div>
+
 <nav>
-  <button class="active" data-s="s-home" onclick="go('s-home')"><span class="ico"></span>Дом</button>
-  <button data-s="s-map" onclick="go('s-map')"><span class="ico">️</span>Карта</button>
-  <button data-s="s-games" onclick="go('s-games')"><span class="ico"></span>Игры</button>
-  <button data-s="s-friends" onclick="go('s-friends')"><span class="ico"></span>Друзья</button>
-  <button data-s="s-set" onclick="go('s-set')"><span class="ico">️</span>Ещё</button>
+  <button class="on" data-g="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg>Дом</button>
+  <button data-g="map" onclick="go('map')"><svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/></svg>Карта</button>
+  <button data-g="games" onclick="go('games')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="12" rx="3"/><path d="M8 12h4M10 10v4M16 12h.01M18 10v0"/></svg>Игры</button>
+  <button data-g="friends" onclick="go('friends')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20a6 6 0 0112 0M14 20a5 5 0 017 0"/></svg>Друзья</button>
+  <button data-g="more" onclick="go('more')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>Ещё</button>
 </nav>
 
 <script>
-/* ============================================================
-   ДАННЫЕ. Тексты — из плана. Аудио-слоты подписаны.
-   ============================================================ */
-const CHAPTERS=[
- {t:"Джонни и потерянная цифра",loc:"Остров Чисел",pages:[
-  "Жил-был на острове пёс по имени Джонни. Любил он считать всё на свете: облака, камешки, рыбок.",
-  "Однажды утром Джонни проснулся и обнаружил, что цифра три исчезла. Исчезла совсем!",
-  "Без цифры три всё перепуталось. Три рыбки стали двумя, а три лапки — одной.",
-  "Побежал Джонни к воробью Пуле. «Пуля, ты не видел цифру три?» — «Видел! Она улетела к реке!»",
-  "На берегу Джонни нашёл следы. «Раз, два… — считал он. — А дальше тишина.»",
-  "В траве блеснуло что-то. Это была цифра три! Она застряла в корнях.",
-  "Джонни аккуратно вытащил её. «Спасибо! — сказала цифра. — Я просто хотела поиграть.»",
-  "С тех пор Джонни знает: числа нужно беречь. А ещё у него появился друг — воробей Пуля."
- ],friend:"pulya"},
- {t:"Как буква А нашла друзей",loc:"Лес Слов",pages:[
-  "В лесу Слов жила буква А. Она была первая в алфавите и очень гордилась этим.",
-  "Но однажды буквы разбежались. Осталась одна А. И стало ей скучно.",
-  "«Где вы все?» — кричала А. Ответом ей был только ветер.",
-  "Пошла А искать друзей. Нашла букву О — та сидела на пенёчке и грустила.",
-  "«Давай встанем рядом», — предложила А. И получилось слово «АО». Непонятное.",
-  "Тут подбежала буква У. «А я знаю, как надо!» — сказала она.",
-  "Встали они в ряд. Но слово всё равно не складывалось.",
-  "«Надо по-другому», — сказала Бабушка Сова. И буквы собрались в слово «ДРУГ».",
-  "С тех пор буква А знает: в одиночестве ты просто буква, а вместе — целое слово."
- ],friend:"sova"},
- {t:"Круг, который хотел стать домом",loc:"Город Форм",pages:[
-  "В Городе Форм жил круг. Он был круглый, гладкий и очень мечтательный.",
-  "«Я хочу стать домом, — говорил круг. — Чтобы в меня можно было войти.»",
-  "Но круг катился, куда хотел, и никак не мог стоять на месте.",
-  "Помог ему крольчонок Топ. «Давай я принесу кирпичи!» — сказал он.",
-  "Топ поставил рядом квадраты. Получилась стена. Круг прижался к ней.",
-  "«Не похоже, — вздохнул круг. — Но зато я больше не качусь!»",
-  "Тогда Топ принёс треугольник. «Это крыша!» — обрадовался он.",
-  "Вышел настоящий дом. А круг стал в нём окном. «Вот теперь я — часть дома», — сказал он."
- ],friend:"top"},
- {t:"Тишина в лесу",loc:"Планета Звуков",pages:[
-  "В лесу Звуков было шумно: пели птицы, жужжали жуки, шуршала листва.",
-  "Однажды ёжик Шур проснулся и услышал… ничего. Тишина.",
-  "«Куда делись звуки?» — испугался Шур. Он побежал по лесу, но не услышал даже своих шагов.",
-  "Встретил он воробья Пулю. Тот открывал клюв, а звука не было.",
-  "Шур сел на пенёк и закрыл глаза. «Надо просто подождать», — подумал он.",
-  "И вдруг — тихое «кап». Капля упала в лужу.",
-  "Потом — «шорох». Потом — «чирик». Звуки возвращались.",
-  "«Звуки любят тишину, — сказал Шур. — В тишине их слышно лучше всего.»"
- ],friend:"shur"},
- {t:"Замок из трёх правил",loc:"Замок Задач",pages:[
-  "На холме стоял замок. Чтобы войти, нужно было выполнить три правила.",
-  "Лисёнок Рыж прочитал надпись: «Правило первое: думай, прежде чем делать.»",
-  "Рыж хотел бежать вперёд, но остановился. Под ногами были хитрые плитки.",
-  "«Правило второе: не сдавайся, если не получилось.»",
-  "Рыж падал раз, два, три. Но каждый раз вставал и пробовал иначе.",
-  "Наконец он дошёл до двери. «Правило третье: делись тем, что знаешь.»",
-  "Рыж позвал Джонни и друзей. Вместе они открыли замок.",
-  "Внутри не было сокровищ. Была карта. «Настоящее сокровище — это путь», — сказал Джонни."
- ],friend:"ryzh"}
-];
+/* ---------- данные ---------- */
+const CH=[
+ {t:"Джонни и потерянная цифра",loc:"Остров Чисел",f:"pulya",p:[
+ "Жил-был на острове пёс по имени Джонни. Любил он считать всё на свете: облака, камешки, рыбок.",
+ "Однажды утром Джонни проснулся и обнаружил, что цифра три исчезла. Исчезла совсем!",
+ "Без цифры три всё перепуталось. Три рыбки стали двумя, а три лапки — одной.",
+ "Побежал Джонни к воробью Пуле. «Пуля, ты не видел цифру три?» — «Видел! Она улетела к реке!»",
+ "На берегу Джонни нашёл следы. «Раз, два… — считал он. — А дальше тишина.»",
+ "В траве блеснуло что-то. Это была цифра три! Она застряла в корнях.",
+ "Джонни аккуратно вытащил её. «Спасибо! — сказала цифра. — Я просто хотела поиграть.»",
+ "С тех пор Джонни знает: числа нужно беречь. А ещё у него появился друг — воробей Пуля."]},
+ {t:"Как буква А нашла друзей",loc:"Лес Слов",f:"sova",p:[
+ "В лесу Слов жила буква А. Она была первая в алфавите и очень гордилась этим.",
+ "Но однажды буквы разбежались. Осталась одна А. И стало ей скучно.",
+ "«Где вы все?» — кричала А. Ответом ей был только ветер.",
+ "Пошла А искать друзей. Нашла букву О — та сидела на пенёчке и грустила.",
+ "«Давай встанем рядом», — предложила А. И получилось слово «АО». Непонятное.",
+ "Тут подбежала буква У. «А я знаю, как надо!» — сказала она.",
+ "Встали они в ряд. Но слово всё равно не складывалось.",
+ "«Надо по-другому», — сказала Бабушка Сова. И буквы собрались в слово «ДРУГ».",
+ "С тех пор буква А знает: в одиночестве ты просто буква, а вместе — целое слово."]},
+ {t:"Круг, который хотел стать домом",loc:"Город Форм",f:"top",p:[
+ "В Городе Форм жил круг. Он был круглый, гладкий и очень мечтательный.",
+ "«Я хочу стать домом, — говорил круг. — Чтобы в меня можно было войти.»",
+ "Но круг катился, куда хотел, и никак не мог стоять на месте.",
+ "Помог ему крольчонок Топ. «Давай я принесу кирпичи!» — сказал он.",
+ "Топ поставил рядом квадраты. Получилась стена. Круг прижался к ней.",
+ "«Не похоже, — вздохнул круг. — Но зато я больше не качусь!»",
+ "Тогда Топ принёс треугольник. «Это крыша!» — обрадовался он.",
+ "Вышел настоящий дом. А круг стал в нём окном. «Вот теперь я — часть дома», — сказал он."]},
+ {t:"Тишина в лесу",loc:"Планета Звуков",f:"shur",p:[
+ "В лесу Звуков было шумно: пели птицы, жужжали жуки, шуршала листва.",
+ "Однажды ёжик Шур проснулся и услышал… ничего. Тишина.",
+ "«Куда делись звуки?» — испугался Шур. Он побежал по лесу, но не услышал даже своих шагов.",
+ "Встретил он воробья Пулю. Тот открывал клюв, а звука не было.",
+ "Шур сел на пенёк и закрыл глаза. «Надо просто подождать», — подумал он.",
+ "И вдруг — тихое «кап». Капля упала в лужу.",
+ "Потом — «шорох». Потом — «чирик». Звуки возвращались.",
+ "«Звуки любят тишину, — сказал Шур. — В тишине их слышно лучше всего.»"]},
+ {t:"Замок из трёх правил",loc:"Замок Задач",f:"ryzh",p:[
+ "На холме стоял замок. Чтобы войти, нужно было выполнить три правила.",
+ "Лисёнок Рыж прочитал надпись: «Правило первое: думай, прежде чем делать.»",
+ "Рыж хотел бежать вперёд, но остановился. Под ногами были хитрые плитки.",
+ "«Правило второе: не сдавайся, если не получилось.»",
+ "Рыж падал раз, два, три. Но каждый раз вставал и пробовал иначе.",
+ "Наконец он дошёл до двери. «Правило третье: делись тем, что знаешь.»",
+ "Рыж позвал Джонни и друзей. Вместе они открыли замок.",
+ "Внутри не было сокровищ. Была карта. «Настоящее сокровище — это путь», — сказал Джонни."]}];
 
-const FRIENDS={
- pulya:{n:"Пуля",e:"",h:"Привет! Я Пуля! Я всё вижу с высоты!"},
- sova:{n:"Бабушка Сова",e:"",h:"Здравствуй. Я Бабушка Сова. У меня много историй."},
- top:{n:"Топ",e:"",h:"Я Топ! Я всё могу принести!"},
- shur:{n:"Шур",e:"",h:"М-м-м… Я Шур. Я люблю слушать."},
- ryzh:{n:"Рыж",e:"",h:"Привет. Я Рыж. Я знаю все тропинки."}
-};
+const FR={pulya:"Пуля",sova:"Бабушка Сова",top:"Топ",shur:"Шур",ryzh:"Рыж"};
+const GM=[["shulte","Таблица Шульте","Найди числа по порядку"],["colors","Раскрась по цифрам","Скоро"],["sounds","Звуки леса","Скоро"],["memory","Что пропало","Скоро"],["words","Собери слово","Скоро"]];
 
-const GAMES=[
- {id:"shulte",n:"Таблица Шульте",e:"",d:"Найди числа по порядку"},
- {id:"colors",n:"Раскрась по цифрам",e:"",d:"Клетки по порядку"},
- {id:"sounds",n:"Звуки леса",e:"",d:"Угадай, кто звучит"},
- {id:"memory",n:"Что пропало",e:"",d:"Найди исчезнувший предмет"},
- {id:"words",n:"Собери слово",e:"",d:"Буквы перепутались"}
-];
-
-/* ============================================================
-   СОСТОЯНИЕ
-   ============================================================ */
-let S={xp:0,lvl:1,unlocked:1,done:[],friends:[]};
+/* ---------- состояние ---------- */
+let S={xp:0,lvl:1,open:1,read:[],fr:[]};
 try{S=Object.assign(S,JSON.parse(localStorage.getItem("johnny")||"{}"))}catch(e){}
 const save=()=>localStorage.setItem("johnny",JSON.stringify(S));
 
 function go(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
-  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.s===id));
-  window.scrollTo(0,0);
-  if(id==="s-map")renderMap();
-  if(id==="s-friends")renderFriends();
+  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.g===id));
+  scrollTo(0,0);
+  if(id==="map")map();
+  if(id==="friends")friends();
+  if(id==="games")games();
 }
-
-function addXP(n){
-  S.xp+=n;
-  if(S.xp>=100){S.xp-=100;S.lvl++;say("ui_level_up")}
-  renderXP();save();
-}
-function renderXP(){
+function xp(n){S.xp+=n;if(S.xp>=100){S.xp-=100;S.lvl++}
   document.getElementById("lvl").textContent=S.lvl;
   document.getElementById("xp").textContent=S.xp;
-  document.getElementById("xpMax").textContent=100;
-  document.getElementById("xpFill").style.width=S.xp+"%";
+  document.getElementById("bar").style.width=S.xp+"%";save();}
+function say(f,t){document.getElementById("stM").textContent=" "+t;
+  console.log("[audio slot]",f);}
+
+/* ---------- карта ---------- */
+function map(){
+  document.getElementById("chs").innerHTML=CH.map((c,i)=>{
+    const locked=i+1>S.open;
+    return `<div class="card ${locked?'lock':''}" ${locked?'':`onclick="st(${i})"`}>
+      <div class="row" style="justify-content:space-between">
+        <div><b>${i+1}. ${c.t}</b><div class="mut" style="margin:2px 0 0">${c.loc}</div></div>
+        <div style="font-size:20px">${locked?'🔒':(S.read.includes(i)?'✅':'▶️')}</div>
+      </div></div>`}).join("");
 }
 
-/* ============================================================
-   ОЗВУЧКА. Пока файлов нет — говорим текстом в msg.
-   Когда положите файл — код сам его подхватит.
-   ============================================================ */
-function say(name,text){
-  const m=document.getElementById("storyMsg")||document.getElementById("shulteMsg");
-  if(m&&text)m.textContent=" "+text;
-  // авто-подключение: new Audio("audio/"+name+".mp3").play()
-  console.log("[аудио-слот]",name);
+/* ---------- история ---------- */
+let ci=0,pi=0;
+function st(i){ci=i;pi=0;document.getElementById("stT").textContent=CH[i].t;pg();go("story");}
+function pg(){
+  const c=CH[ci];
+  if(pi>=c.p.length){
+    if(!S.read.includes(ci)){S.read.push(ci);
+      if(!S.fr.includes(c.f)){S.fr.push(c.f);say("friend_joined","У нас новый друг: "+FR[c.f]);}}
+    xp(30);map();go("map");return;}
+  document.getElementById("stB").textContent=c.p[pi];
+  say("story"+(ci+1)+"_p"+String(pi+1).padStart(2,"0"),c.p[pi]);
+  pi++;
 }
 
-/* ============================================================
-   КАРТА
+/* ---------- игры ---------- */
+function games(){
+  document.getElementById("gl").innerHTML=GM.map(g=>
+    `<div class="tile" ${g[0]==="shulte"?`onclick="go('shulte')`:'style="opacity:.5"'}>
+     <b>${g[1]}</b><small>${g[2]}</small></div>`).join("");
+}
 
-[(doc_common_card_1)]
+/* ---------- Шульте ---------- */
+let shN=0,shT=0;
+function shStart(){
+  const n=16,shN_=n;shN=1;shT=Date.now();
+  const a=[...Array(n).keys()].map(i=>i+1).sort(()=>Math.random()-.5);
+  document.getElementById("shG").innerHTML=a.map(v=>
+    `<button onclick="shTap(this,${v})">${v}</button>`).join("");
+  document.getElementById("shM").textContent="Ищи число 1";
+}
+function shTap(el,v){
+  if(v!==shN){document.getElementById("shM").textContent="Не то. Ищи "+shN;return;}
+  el.classList.add("ok");shN++;
+  if(shN>16){const s=((Date.now()-shT)/1000).toFixed(1);
+    document.getElementById("shM").textContent="Готово! Время "+s+" с";xp(20);}
+  else document.getElementById("shM").textContent="Ищи число "+shN;
+}
 
----
-代码还没发完，稍等，我继续把剩余部分补全。
-<websource>inline_action_reply_1</websource>
+/* ---------- друзья ---------- */
+function friends(){
+  document.getElementById("fc").textContent=S.fr.length+" из 5";
+  document.getElementById("fg").innerHTML=Object.entries(FR).map(([k,n])=>
+    `<div class="tile ${S.fr.includes(k)?'':'lock'}"><b>${n}</b>
+     <small>${S.fr.includes(k)?'друг':'пройди историю'}</small></div>`).join("");
+}
+
+/* ---------- родители ---------- */
+function par(){
+  if(document.getElementById("pc").value=="6"){alert("Раздел для родителей (заготовка)");}
+  else alert("Неверно");
+}
+
+/* ---------- старт ---------- */
+document.getElementById("lvl").textContent=S.lvl;
+document.getElementById("xp").textContent=S.xp;
+document.getElementById("bar").style.width=S.xp+"%";
+document.getElementById("fc").textContent=S.fr.length+" из 5";
+</script>
+</body>
+</html>
