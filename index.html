@@ -1,634 +1,343 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Игры с Джонни</title>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Путь с Джонни</title>
 <style>
-:root{--ink:#352943;--plum:#5B4670;--soft:#6E6380;--paper:#F7F4FA;--peach:#F3B58C;--peach-l:#FBE3D2;--mint:#A9D3C6;--mint-l:#DDEFE9;--butter-l:#FBF1CC;--lilac:#ECE4F3;--red:#E0604F;--green:#3E8B4F;--gold:#E0A800}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%}
-body{background:var(--paper);color:var(--ink);font:700 17px/1.35 "Nunito",system-ui,sans-serif;user-select:none;overflow-x:hidden}
-h1,h2,h3{font-family:"Unbounded",sans-serif;margin:0;line-height:1.15}
-button{font:inherit;color:inherit;border:0;cursor:pointer}
-.screen{display:none;min-height:100vh;padding:16px 16px 28px;max-width:520px;margin:0 auto;flex-direction:column}
-.screen.on{display:flex}
-.ph{display:inline-flex;align-items:center;justify-content:center;font-size:64px;background:var(--lilac);border-radius:24px}
+:root{
+  /* ===== SAFE AREA: чёлка iPhone и статус-бар Android ===== */
+  --sat: env(safe-area-inset-top);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
 
-/* верхняя панель профиля (Duolingo-слой) */
-.topbar{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-bottom:12px}
-.chip{background:#fff;border-radius:99px;padding:6px 12px;font-size:14px;display:flex;align-items:center;gap:5px}
-.chip b{font-weight:800}
-.icobtn{background:#fff;border-radius:99px;width:38px;height:38px;font-size:17px;display:flex;align-items:center;justify-content:center}
+  --c-bg:#FDF6EC;
+  --c-sand:#F7E8C9;
+  --c-sea:#7FC4E8;
+  --c-grass:#8FD694;
+  --c-wood:#C89B6C;
+  --c-text:#4A3B2A;
+  --c-accent:#FF8A5B;
+  --c-gold:#FFC93C;
+  --radius:20px;
+  --font: -apple-system, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
+}
 
-/* welcome */
-.wl{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:16px}
-.wl img,.wl .ph{width:150px;height:150px;object-fit:contain;mix-blend-mode:multiply;margin:0 auto}
-.wl h1{font-size:23px}
-.wl p{margin:0;color:var(--soft);font-weight:700}
-.agepick{display:flex;gap:10px}
-.agepick button{flex:1;background:#fff;border-radius:20px;padding:16px 8px;text-align:center}
-.agepick button.on{background:var(--ink);color:#fff}
-.agepick small{display:block;font-weight:600;opacity:.8;margin-top:4px;font-size:12px}
-.namein{border:2px solid var(--lilac);background:#fff;border-radius:16px;padding:14px;font:inherit;text-align:center;color:var(--ink)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:var(--font);
+  background:var(--c-bg);
+  color:var(--c-text);
+  overflow-x:hidden;
+  user-select:none;
+  -webkit-user-select:none;
+}
 
-/* главная */
-.hello{display:flex;gap:12px;align-items:center;background:#fff;border-radius:24px;padding:12px 14px;margin-bottom:16px}
-.hello img,.hello .ph{width:84px;height:84px;object-fit:contain;mix-blend-mode:multiply}
-.hello .ph{font-size:44px;border-radius:18px}
-.hello h1{font-size:19px;margin-bottom:4px}
-.hello p{margin:0;font-size:15px;color:var(--soft);font-weight:600}
-.pathbar{background:#fff;border-radius:18px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
-.pathbar .lvl{width:52px;height:52px;border-radius:50%;background:var(--peach-l);display:flex;align-items:center;justify-content:center;font-family:"Unbounded";font-size:20px;flex:none}
-.pathbar .meta{flex:1}
-.pathbar .meta .zvanie{font-family:"Unbounded";font-size:15px}
-.pathbar .bar{height:8px;background:var(--lilac);border-radius:9px;overflow:hidden;margin-top:6px}
-.pathbar .bar i{display:block;height:100%;background:var(--gold);width:0}
-.pathbar .xp{font-size:13px;color:var(--soft);font-weight:800;margin-top:4px}
-.sectitle{font-family:"Unbounded";font-size:14px;margin:2px 0 8px;color:var(--plum)}
-.games{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{border-radius:22px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:140px;position:relative;transition:transform .1s}
-.card:active{transform:scale(.97)}
-.card .ico{font-size:34px;line-height:1}
-.card h3{font-size:15px}
-.card p{margin:0;font-size:13px;color:var(--soft);font-weight:600}
-.card .best{position:absolute;right:10px;top:10px;font-size:11px;background:rgba(255,255,255,.7);border-radius:99px;padding:2px 8px;color:var(--plum)}
-.card .best:empty{display:none}
-.c1{background:var(--peach-l)}.c2{background:var(--mint-l)}.c3{background:var(--butter-l)}.c4{background:var(--lilac)}.c5{background:var(--peach-l)}.c6{background:var(--mint-l)}
-.foot{margin-top:18px;text-align:center;font-size:13px;color:var(--soft);font-weight:600}
-.foot a{color:var(--plum)}
+/* ===== ЭКРАН ===== */
+.screen{
+  display:none;
+  min-height:100vh;
+  padding:calc(16px + var(--sat)) calc(16px + var(--sar)) calc(80px + var(--sab)) calc(16px + var(--sal));
+  animation:fade .35s ease;
+}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* награды */
-.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.rcard{background:#fff;border-radius:18px;padding:14px 8px;text-align:center}
-.rcard .em{font-size:40px}
-.rcard.locked{background:var(--lilac);color:var(--soft);opacity:.7}
-.rcard.locked .em{filter:grayscale(1)}
-.rcard .nm{font-size:12px;font-weight:800;margin-top:6px}
-.rcard .need{font-size:11px;color:var(--soft)}
+h1{font-size:26px;margin-bottom:6px;}
+h2{font-size:20px;margin-bottom:12px;}
+.sub{font-size:14px;opacity:.65;margin-bottom:18px;}
 
-/* общее для игр */
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
-.top h2{font-size:18px}
-.back{background:#fff;border-radius:99px;padding:8px 14px;font-size:14px}
-.hud{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
-.hud span{background:#fff;border-radius:99px;padding:6px 14px;font-size:15px}
-.rule{background:#fff;border-radius:18px;padding:12px 14px;font-size:15px;font-weight:600;color:var(--soft);margin-bottom:12px}
-.rule b{color:var(--ink)}
-.seg{display:flex;background:#fff;border-radius:99px;padding:4px;margin-bottom:12px}
-.seg button{flex:1;border-radius:99px;padding:9px 6px;background:none;font-size:14px}
-.seg button.on{background:var(--ink);color:#fff}
-.big{display:block;width:100%;background:var(--ink);color:#fff;border-radius:18px;padding:16px;font-size:18px;margin-top:12px}
-.big.alt{background:#fff;color:var(--ink)}
-.stage{flex:1;display:flex;flex-direction:column;justify-content:center}
-.shake{animation:sh .3s}
-@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* ===== НИЖНЯЯ НАВИГАЦИЯ ===== */
+nav{
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;justify-content:space-around;
+  padding:10px 8px calc(10px + var(--sab));
+  background:#fff;
+  border-top:1px solid rgba(0,0,0,.06);
+  z-index:100;
+}
+nav button{
+  background:none;border:none;font-family:inherit;
+  font-size:12px;color:var(--c-text);opacity:.5;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:64px;padding:6px;
+}
+nav button.active{opacity:1;color:var(--c-accent);font-weight:600;}
+nav button .ico{font-size:20px;}
 
-/* Шульте */
-.sgrid{display:grid;gap:6px}
-.sgrid button{aspect-ratio:1;border-radius:14px;font:700 24px "Unbounded";transition:opacity .2s}
-.sgrid button.done{opacity:.2}
-.sgrid.n3 button{font-size:34px}.sgrid.n5 button{font-size:20px}
+/* ===== КАРТОЧКИ ===== */
+.card{
+  background:#fff;border-radius:var(--radius);
+  padding:18px;margin-bottom:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tile{
+  background:#fff;border-radius:var(--radius);padding:14px;
+  box-shadow:0 3px 10px rgba(0,0,0,.05);
+  text-align:center;
+}
+.tile .emoji{font-size:34px;display:block;margin-bottom:6px;}
+.tile small{opacity:.6;font-size:11px;}
 
-/* Струп */
-.show{height:170px;display:flex;align-items:center;justify-content:center;font-size:110px;background:#fff;border-radius:28px;margin-bottom:14px}
-.show.word{font:700 30px "Unbounded"}
-.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.answers button{border-radius:18px;padding:18px 8px;font-size:20px;background:#fff}
-.answers .dot{height:64px}
+.btn{
+  display:inline-block;border:none;font-family:inherit;
+  background:var(--c-accent);color:#fff;
+  padding:14px 22px;border-radius:14px;font-size:16px;font-weight:600;
+  width:100%;margin-top:10px;
+}
+.btn.ghost{background:#fff;color:var(--c-text);border:2px solid var(--c-sand);}
+.btn:active{transform:scale(.97);}
 
-/* быстрый глаз */
-.flash{height:120px;display:flex;align-items:center;justify-content:center;font:700 34px "Unbounded";letter-spacing:2px;background:#fff;border-radius:28px;margin-bottom:14px}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opts button{background:#fff;border-radius:18px;padding:16px 6px;font:700 17px "Unbounded"}
-.opts button.ok{background:#CDEBD6}.opts button.bad{background:#F7C9C2}
+/* ===== XP ===== */
+.xp-bar{height:10px;background:var(--c-sand);border-radius:10px;overflow:hidden;margin:8px 0 14px;}
+.xp-fill{height:100%;width:0;background:var(--c-gold);transition:width .6s;}
 
-/* слово-невидимка */
-.letters{background:#fff;border-radius:22px;padding:16px 10px;font:700 22px "Unbounded";letter-spacing:4px;text-align:center;word-break:break-all;margin-bottom:14px}
+/* ===== ПИКСЕЛЬНЫЙ ДЖОННИ ===== */
+.island{
+  position:relative;height:120px;border-radius:var(--radius);
+  background:linear-gradient(180deg,var(--c-sea) 0 55%,var(--c-grass) 55%);
+  overflow:hidden;margin-bottom:16px;
+}
+.johnny-pixel{
+  position:absolute;bottom:14px;left:0;
+  width:48px;height:48px;
+  image-rendering:pixelated;
+  animation:walk 12s linear infinite;
+}
+/* пока нет картинки — рисуем CSS-джонни */
+.johnny-pixel::before{
+  content:"";font-size:34px;position:absolute;bottom:0;
+  animation:bob .4s steps(2) infinite;
+}
+@keyframes walk{from{left:-50px}to{left:100%}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-/* память */
-.mem{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.mem button,.mem div{aspect-ratio:1;border-radius:16px;background:#fff;font-size:38px;display:flex;align-items:center;justify-content:center}
-.mem button.sel{background:var(--peach)}
-.mem button.ok{background:#CDEBD6}.mem button.miss{background:#F7C9C2}
-.timerbar{height:8px;background:#fff;border-radius:9px;overflow:hidden;margin-bottom:12px}
-.timerbar i{display:block;height:100%;background:var(--peach);width:100%}
+/* ===== СЛОТЫ ПОД ФАЙЛЫ ===== */
+.slot{
+  border:2px dashed #E0B98A;border-radius:12px;
+  padding:10px;margin:8px 0;background:#FFF9EF;
+  font-size:12px;color:#8A7355;
+}
+.slot b{color:var(--c-accent);font-family:monospace;font-size:11px;}
 
-/* перерыв (SanPiN) */
-.brk{text-align:center;align-items:center;justify-content:center}
-.brk .ph,.brk img{width:170px;height:170px;object-fit:contain;mix-blend-mode:multiply;margin:0 auto 10px}
-.brk h2{font-size:22px;margin:6px}
-.brk p{color:var(--soft);font-weight:700}
+/* ===== ИГРЫ ===== */
+.shulte{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0;}
+.shulte div{
+  aspect-ratio:1;background:#fff;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.shulte div.done{background:var(--c-grass);color:#fff;}
 
-/* результат */
-.res{text-align:center;align-items:center;justify-content:center}
-.res img,.res .ph{width:200px;height:200px;object-fit:contain;mix-blend-mode:multiply}
-.res .ph{font-size:90px;border-radius:32px}
-.res h2{font-size:24px;margin:8px 0}
-.res p{font-size:17px;color:var(--soft);font-weight:600;margin:0 0 6px}
-.stars{font-size:40px;letter-spacing:6px;margin:6px 0}
-.xpgain{display:inline-block;background:var(--gold);color:#fff;border-radius:99px;padding:6px 16px;font-size:16px;margin:4px 0}
-.rewardpop{background:var(--peach-l);border-radius:16px;padding:10px;font-size:14px;margin:6px 0}
-.res .big{max-width:340px}
+.msg{
+  background:#FFF3E0;border-radius:12px;padding:12px;
+  margin:12px 0;font-size:14px;min-height:44px;
+}
 </style>
 </head>
 <body>
 
-<!-- ONBOARDING -->
-<section class="screen" id="welcome">
-  <div class="wl">
-    <img src="johnny.jpg" alt="Джонни" onerror="this.outerHTML='<span class=\'ph\'>🐶</span>'">
-    <h1>Привет! Я Джонни</h1>
-    <p>Как тебя зовут?</p>
-    <input class="namein" id="w-name" placeholder="Например, Маша" maxlength="14">
-    <p>Сколько тебе лет?</p>
-    <div class="agepick" id="w-age">
-      <button data-age="4-6" class="on">4–6 лет<small>крупно, без таймера</small></button>
-      <button data-age="6-8">6–8 лет<small>быстрее, со звёздами</small></button>
+<!-- ============ ГЛАВНАЯ ============ -->
+<section class="screen active" id="s-home">
+  <div class="card">
+    <div class="island">
+      <div class="johnny-pixel" id="johnny"></div>
     </div>
-    <button class="big" id="w-go">Играть с Джонни!</button>
+    <h1>Путь с Джонни</h1>
+    <p class="sub">Уровень <span id="lvl">1</span> · XP <span id="xp">0</span>/<span id="xpMax">100</span></p>
+    <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+    <button class="btn" onclick="go('s-map')">Продолжить приключение</button>
+    <button class="btn ghost" onclick="go('s-games')">Играть</button>
+  </div>
+  <div class="grid">
+    <div class="tile"><span class="emoji"></span>Истории<small>5 глав</small></div>
+    <div class="tile"><span class="emoji"></span>Игры<small>5 игр</small></div>
+    <div class="tile"><span class="emoji"></span>Друзья<small id="frCount">0</small></div>
+    <div class="tile"><span class="emoji"></span>Награды<small>0</small></div>
   </div>
 </section>
 
-<!-- ГЛАВНАЯ / ДОРОЖКА -->
-<section class="screen" id="home">
-  <div class="topbar">
-    <div class="chip">⭐ <b id="t-xp">0</b> XP</div>
-    <div class="chip">🔥 <b id="t-streak">0</b></div>
-    <button class="icobtn" id="t-sound" title="Звук">🔊</button>
-    <button class="icobtn" id="t-settings" title="Настройки">⚙️</button>
+<!-- ============ КАРТА ============ -->
+<section class="screen" id="s-map">
+  <h1>Карта острова</h1>
+  <p class="sub">Открывай главы по порядку</p>
+  <div id="chapters"></div>
+</section>
+
+<!-- ============ ИСТОРИЯ ============ -->
+<section class="screen" id="s-story">
+  <h2 id="storyTitle">История</h2>
+  <div class="card" id="storyText" style="min-height:120px;font-size:16px;line-height:1.6"></div>
+  <div class="msg" id="storyMsg"> Здесь прозвучит озвучка</div>
+  <button class="btn" onclick="nextPage()">Дальше →</button>
+  <button class="btn ghost" onclick="go('s-map')">← К карте</button>
+</section>
+
+<!-- ============ ИГРЫ ============ -->
+<section class="screen" id="s-games">
+  <h1>Игры</h1>
+  <p class="sub">5 игр на внимание, память и логику</p>
+  <div class="grid" id="gameList"></div>
+</section>
+
+<!-- ============ ИГРА: ШУЛЬТЕ ============ -->
+<section class="screen" id="s-shulte">
+  <h2>Таблица Шульте</h2>
+  <p class="sub">Нажимай числа по порядку</p>
+  <div class="msg" id="shulteMsg">Нажми «Начать»</div>
+  <div class="shulte" id="shulteGrid"></div>
+  <button class="btn" onclick="startShulte()">Начать</button>
+  <button class="btn ghost" onclick="go('s-games')">← Назад</button>
+</section>
+
+<!-- ============ ДРУЗЬЯ ============ -->
+<section class="screen" id="s-friends">
+  <h1>Друзья Джонни</h1>
+  <p class="sub">Появляются по ходу историй</p>
+  <div class="grid" id="friendGrid"></div>
+  <button class="btn ghost" onclick="go('s-home')">← Домой</button>
+</section>
+
+<!-- ============ НАСТРОЙКИ ============ -->
+<section class="screen" id="s-set">
+  <h1>Настройки</h1>
+  <div class="card">
+    <label>Звук <input type="checkbox" id="sndToggle" checked style="float:right"></label>
+    <div style="margin-top:10px">Родительский раздел: <b>2 × 3 = ?</b></div>
+    <input type="number" id="pCheck" style="width:80px;padding:8px;border-radius:8px;border:1px solid #ddd" placeholder="?">
+    <button class="btn" onclick="parentCheck()">Войти</button>
   </div>
-  <div class="pathbar">
-    <div class="lvl" id="t-level">1</div>
-    <div class="meta">
-      <div class="zvanie" id="t-zvanie">Новичок</div>
-      <div class="bar"><i id="t-barfill"></i></div>
-      <div class="xp" id="t-xpnext"></div>
-    </div>
-  </div>
-  <div class="hello">
-    <img src="johnny.jpg" alt="Джонни" onerror="this.outerHTML='<span class=\'ph\'>🐶</span>'">
-    <div><h1 id="h-hello">Привет!</h1><p>Играй каждый день — Джонни растёт вместе с тобой 🎈</p></div>
-  </div>
-  <div class="sectitle">Игры и задания 🎮</div>
-  <div class="games">
-    <button class="card c1" data-go="schulte"><span class="best" id="b-schulte"></span><span class="ico">🔢</span><h3>Таблица Шульте</h3><p>Найди числа по порядку</p></button>
-    <button class="card c2" data-go="stroop"><span class="best" id="b-stroop"></span><span class="ico">🌞</span><h3>День — ночь</h3><p>Не дай себя запутать</p></button>
-    <button class="card c3" data-go="flash"><span class="best" id="b-flash"></span><span class="ico">⚡</span><h3>Быстрый глаз</h3><p>Успей прочитать слово</p></button>
-    <button class="card c4" data-go="hidden"><span class="best" id="b-hidden"></span><span class="ico">🔍</span><h3>Слово-невидимка</h3><p>Найди слово среди букв</p></button>
-    <button class="card c5" data-go="memory"><span class="best" id="b-memory"></span><span class="ico">🧠</span><h3>Запомни картинки</h3><p>Тренируем память</p></button>
-    <button class="card c6" data-go="tongue"><span class="ico">👅</span><h3>Скороговорка дня</h3><p>Скажи три раза быстро</p></button>
-  </div>
-  <div class="sectitle" style="margin-top:18px">Награды Джонни 🏆</div>
-  <div class="rgrid" id="h-rewards"></div>
-  <p class="foot">Игры от Ирины Крючковой — педагога по скорочтению и развитию мозга.<br><a href="#" id="signup">Записаться на занятия</a></p>
+  <button class="btn ghost" onclick="go('s-home')">← Домой</button>
 </section>
 
-<!-- ШУЛЬТЕ -->
-<section class="screen" id="schulte">
-  <div class="top"><button class="back" data-home>← Назад</button><h2>Таблица Шульте</h2></div>
-  <div class="seg" id="s-size"><button data-n="3">3×3</button><button data-n="4">4×4</button><button data-n="5">5×5</button></div>
-  <div class="hud"><span>Найди: <b id="s-next">1</b></span><span>⏱ <b id="s-time">0,0</b></span></div>
-  <div class="stage"><div class="sgrid" id="s-grid"></div></div>
-  <p class="rule" style="margin-top:12px">Смотри в центр таблицы и старайся не водить глазами. Нажимай числа по порядку!</p>
-</section>
-
-<!-- СТРУП -->
-<section class="screen" id="stroop">
-  <div class="top"><button class="back" data-home>← Назад</button><h2 id="st-title">День — ночь</h2></div>
-  <div class="seg" id="st-mode"><button data-m="day">Для малышей</button><button data-m="color">Для школьников</button></div>
-  <p class="rule" id="st-rule"></p>
-  <div class="hud"><span><b id="st-n">0</b> / 20</span><span>⏱ <b id="st-time">0,0</b></span></div>
-  <div class="stage"><div class="show" id="st-show"></div><div class="answers" id="st-ans"></div></div>
-</section>
-
-<!-- БЫСТРЫЙ ГЛАЗ -->
-<section class="screen" id="flash">
-  <div class="top"><button class="back" data-home>← Назад</button><h2>Быстрый глаз</h2></div>
-  <p class="rule">Слово появится всего на мгновение. <b>Успей прочитать</b> и выбери его. С каждым верным ответом слово мелькает быстрее!</p>
-  <div class="hud"><span><b id="f-n">0</b> / 10</span><span>Скорость: <b id="f-ms">—</b></span></div>
-  <div class="stage"><div class="flash" id="f-show">Готов?</div><div class="opts" id="f-opts"></div>
-  <button class="big" id="f-start">Начать</button></div>
-</section>
-
-<!-- СЛОВО-НЕВИДИМКА -->
-<section class="screen" id="hidden">
-  <div class="top"><button class="back" data-home>← Назад</button><h2>Слово-невидимка</h2></div>
-  <p class="rule">Среди букв спряталось слово. <b>Какое?</b></p>
-  <div class="hud"><span><b id="h-n">0</b> / 10</span><span>⏱ <b id="h-time">0,0</b></span></div>
-  <div class="stage"><div class="letters" id="h-row"></div><div class="opts" id="h-opts"></div></div>
-</section>
-
-<!-- ПАМЯТЬ -->
-<section class="screen" id="memory">
-  <div class="top"><button class="back" data-home>← Назад</button><h2>Запомни картинки</h2></div>
-  <p class="rule" id="m-rule"></p>
-  <div class="hud"><span>Уровень <b id="m-lvl">1</b></span><span>Картинок: <b id="m-k">3</b></span></div>
-  <div class="timerbar" id="m-bar"><i></i></div>
-  <div class="stage"><div class="mem" id="m-grid"></div><button class="big" id="m-btn">Начать</button></div>
-</section>
-
-<!-- СКОРОГОВОРКА -->
-<section class="screen" id="tongue">
-  <div class="top"><button class="back" data-home>← Назад</button><h2>Скороговорка дня</h2></div>
-  <div class="stage" style="text-align:center">
-    <img src="johnny.jpg" alt="" onerror="this.outerHTML='<span class=\'ph\'>🐶</span>'" style="width:150px;height:150px;object-fit:contain;mix-blend-mode:multiply;margin:0 auto">
-    <div class="flash" id="t-text" style="height:auto;min-height:140px;padding:20px;font-size:21px;line-height:1.4;letter-spacing:0"></div>
-    <p class="rule">Скажи медленно, потом быстрее, а потом очень быстро! Получилось без ошибок?</p>
-    <button class="big" id="t-self">Получилось! +5 XP</button>
-    <button class="big alt" id="t-next">Другая скороговорка</button>
-  </div>
-</section>
-
-<!-- ПЕРЕРЫВ -->
-<section class="screen brk" id="break">
-  <img src="johnny.jpg" alt="" onerror="this.outerHTML='<span class=\'ph\'>🐶</span>'">
-  <h2>Джонни идёт гулять! 🌳</h2>
-  <p>Ты сегодня здорово потренировался. Глазкам нужен отдых.<br>Приходи завтра — будет новая дорожка!</p>
-  <button class="big" data-home style="max-width:340px">Хорошо</button>
-</section>
-
-<!-- РЕЗУЛЬТАТ -->
-<section class="screen res" id="result">
-  <img src="johnny-medal.jpg" alt="Джонни с медалью" onerror="this.outerHTML='<span class=\'ph\'>🏅</span>'">
-  <div class="stars" id="r-stars"></div>
-  <h2 id="r-title"></h2>
-  <p id="r-text"></p>
-  <div class="xpgain" id="r-xp"></div>
-  <div class="rewardpop" id="r-reward" style="display:none"></div>
-  <p id="r-best"></p>
-  <button class="big" id="r-again">Ещё раз</button>
-  <button class="big alt" data-home>Другие игры</button>
-</section>
+<!-- ============ НАВИГАЦИЯ ============ -->
+<nav>
+  <button class="active" data-s="s-home" onclick="go('s-home')"><span class="ico"></span>Дом</button>
+  <button data-s="s-map" onclick="go('s-map')"><span class="ico">️</span>Карта</button>
+  <button data-s="s-games" onclick="go('s-games')"><span class="ico"></span>Игры</button>
+  <button data-s="s-friends" onclick="go('s-friends')"><span class="ico"></span>Друзья</button>
+  <button data-s="s-set" onclick="go('s-set')"><span class="ico">️</span>Ещё</button>
+</nav>
 
 <script>
-/* ======================= Telegram / хабтика ======================= */
-const tg = window.Telegram && window.Telegram.WebApp;
-if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#F7F4FA'); tg.setBackgroundColor('#F7F4FA'); } catch (e) {} }
-const haptic = t => { try { tg && tg.HapticFeedback && (t === 'ok' ? tg.HapticFeedback.notificationOccurred('success') : t === 'bad' ? tg.HapticFeedback.notificationOccurred('error') : tg.HapticFeedback.impactOccurred('light')); } catch (e) {} };
-const $ = id => document.getElementById(id);
-const rnd = n => Math.floor(Math.random() * n);
-const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const fmt = ms => (ms / 1000).toFixed(1).replace('.', ',');
-const todayKey = () => new Date().toISOString().slice(0, 10);
-
-/* ======================= ОЗВУЧКА (Web Speech + заготовка mp3) =======================
-   Когда запишете mp3 по ТЗ — положите их в assets/audio/ и добавьте сюда ключи.
-   Формат: SPEECH_FILES['win'] = 'assets/audio/win_01.mp3';
-   Если файла нет — говорим через Web Speech (ru-RU), работает прямо сейчас. */
-const SPEECH_FILES = {}; // заполняется после записи озвучки (см. ТЗ_озвучка.md)
-let soundOn = true, canSpeak = 'speechSynthesis' in window, lastSpeak = '';
-function speak(text) {
-  if (!soundOn || !text || text === lastSpeak) return; lastSpeak = text;
-  try { speechSynthesis.cancel(); } catch (e) {}
-  // приоритет готовому mp3
-  const key = SPEECH_FILES[text];
-  if (key) { try { new Audio(key).play(); return; } catch (e) {} }
-  if (!canSpeak) return;
-  try {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ru-RU'; u.rate = 0.95; u.pitch = 1.15;
-    const v = (speechSynthesis.getVoices() || []).find(x => /ru/i.test(x.lang));
-    if (v) u.voice = v;
-    speechSynthesis.speak(u);
-  } catch (e) {}
-}
-document.addEventListener('click', () => { if (canSpeak) speechSynthesis.getVoices(); }, { once: true });
-
-/* ======================= ПРОФИЛЬ / XP / НАГРАДЫ (Duolingo-слой) ======================= */
-const LEVELS = [
-  { xp: 0, name: 'Новичок Джонни' }, { xp: 100, name: 'Искатель' }, { xp: 300, name: 'Следопыт' },
-  { xp: 600, name: 'Знаток' }, { xp: 1000, name: 'Хранитель леса' }, { xp: 1600, name: 'Чемпион памяти' }, { xp: 2400, name: 'Супермозг' }
+/* ============================================================
+   ДАННЫЕ. Тексты — из плана. Аудио-слоты подписаны.
+   ============================================================ */
+const CHAPTERS=[
+ {t:"Джонни и потерянная цифра",loc:"Остров Чисел",pages:[
+  "Жил-был на острове пёс по имени Джонни. Любил он считать всё на свете: облака, камешки, рыбок.",
+  "Однажды утром Джонни проснулся и обнаружил, что цифра три исчезла. Исчезла совсем!",
+  "Без цифры три всё перепуталось. Три рыбки стали двумя, а три лапки — одной.",
+  "Побежал Джонни к воробью Пуле. «Пуля, ты не видел цифру три?» — «Видел! Она улетела к реке!»",
+  "На берегу Джонни нашёл следы. «Раз, два… — считал он. — А дальше тишина.»",
+  "В траве блеснуло что-то. Это была цифра три! Она застряла в корнях.",
+  "Джонни аккуратно вытащил её. «Спасибо! — сказала цифра. — Я просто хотела поиграть.»",
+  "С тех пор Джонни знает: числа нужно беречь. А ещё у него появился друг — воробей Пуля."
+ ],friend:"pulya"},
+ {t:"Как буква А нашла друзей",loc:"Лес Слов",pages:[
+  "В лесу Слов жила буква А. Она была первая в алфавите и очень гордилась этим.",
+  "Но однажды буквы разбежались. Осталась одна А. И стало ей скучно.",
+  "«Где вы все?» — кричала А. Ответом ей был только ветер.",
+  "Пошла А искать друзей. Нашла букву О — та сидела на пенёчке и грустила.",
+  "«Давай встанем рядом», — предложила А. И получилось слово «АО». Непонятное.",
+  "Тут подбежала буква У. «А я знаю, как надо!» — сказала она.",
+  "Встали они в ряд. Но слово всё равно не складывалось.",
+  "«Надо по-другому», — сказала Бабушка Сова. И буквы собрались в слово «ДРУГ».",
+  "С тех пор буква А знает: в одиночестве ты просто буква, а вместе — целое слово."
+ ],friend:"sova"},
+ {t:"Круг, который хотел стать домом",loc:"Город Форм",pages:[
+  "В Городе Форм жил круг. Он был круглый, гладкий и очень мечтательный.",
+  "«Я хочу стать домом, — говорил круг. — Чтобы в меня можно было войти.»",
+  "Но круг катился, куда хотел, и никак не мог стоять на месте.",
+  "Помог ему крольчонок Топ. «Давай я принесу кирпичи!» — сказал он.",
+  "Топ поставил рядом квадраты. Получилась стена. Круг прижался к ней.",
+  "«Не похоже, — вздохнул круг. — Но зато я больше не качусь!»",
+  "Тогда Топ принёс треугольник. «Это крыша!» — обрадовался он.",
+  "Вышел настоящий дом. А круг стал в нём окном. «Вот теперь я — часть дома», — сказал он."
+ ],friend:"top"},
+ {t:"Тишина в лесу",loc:"Планета Звуков",pages:[
+  "В лесу Звуков было шумно: пели птицы, жужжали жуки, шуршала листва.",
+  "Однажды ёжик Шур проснулся и услышал… ничего. Тишина.",
+  "«Куда делись звуки?» — испугался Шур. Он побежал по лесу, но не услышал даже своих шагов.",
+  "Встретил он воробья Пулю. Тот открывал клюв, а звука не было.",
+  "Шур сел на пенёк и закрыл глаза. «Надо просто подождать», — подумал он.",
+  "И вдруг — тихое «кап». Капля упала в лужу.",
+  "Потом — «шорох». Потом — «чирик». Звуки возвращались.",
+  "«Звуки любят тишину, — сказал Шур. — В тишине их слышно лучше всего.»"
+ ],friend:"shur"},
+ {t:"Замок из трёх правил",loc:"Замок Задач",pages:[
+  "На холме стоял замок. Чтобы войти, нужно было выполнить три правила.",
+  "Лисёнок Рыж прочитал надпись: «Правило первое: думай, прежде чем делать.»",
+  "Рыж хотел бежать вперёд, но остановился. Под ногами были хитрые плитки.",
+  "«Правило второе: не сдавайся, если не получилось.»",
+  "Рыж падал раз, два, три. Но каждый раз вставал и пробовал иначе.",
+  "Наконец он дошёл до двери. «Правило третье: делись тем, что знаешь.»",
+  "Рыж позвал Джонни и друзей. Вместе они открыли замок.",
+  "Внутри не было сокровищ. Была карта. «Настоящее сокровище — это путь», — сказал Джонни."
+ ],friend:"ryzh"}
 ];
-const REWARDS = [
-  { id: 'bone', em: '🦴', nm: 'Косточка', xp: 0 }, { id: 'balloon', em: '🎈', nm: 'Шарик', xp: 100 },
-  { id: 'hat', em: '🎩', nm: 'Цилиндр', xp: 200 }, { id: 'star', em: '⭐', nm: 'Звезда', xp: 350 },
-  { id: 'cap', em: '🧢', nm: 'Кепка', xp: 550 }, { id: 'medal', em: '🏅', nm: 'Медаль', xp: 800 },
-  { id: 'cake', em: '🎂', nm: 'Торт', xp: 1100 }, { id: 'train', em: '🚂', nm: 'Паровозик', xp: 1500 },
-  { id: 'crown', em: '👑', nm: 'Корона', xp: 2000 }
-];
-let P = { name: '', age: '4-6', xp: 0, sound: true, rewards: [], streak: 0, lastDay: '', games: {} };
-function loadP() {
-  try { Object.assign(P, JSON.parse(localStorage.getItem('jprof') || '{}')); } catch (e) {}
-  if (tg && tg.CloudStorage) tg.CloudStorage.getItem('jprof', (e, v) => { if (!e && v) { try { Object.assign(P, JSON.parse(v)); renderHome(); } catch (x) {} } });
-}
-function saveP() { const s = JSON.stringify(P); try { localStorage.setItem('jprof', s); } catch (e) {} try { tg && tg.CloudStorage && tg.CloudStorage.setItem('jprof', s); } catch (e) {} }
-function levelOf(xp) { let l = LEVELS[0], i = 0; LEVELS.forEach((x, k) => { if (xp >= x.xp) { l = x; i = k; } }); return { i, cur: l, next: LEVELS[i + 1] || null }; }
-function unlockedRewards() { return REWARDS.filter(r => P.xp >= r.xp); }
-function addXP(n, gameId) {
-  const before = unlockedRewards().map(r => r.id);
-  P.xp += n;
-  if (gameId) { const g = P.games[gameId] || { played: 0 }; g.played++; P.games[gameId] = g; }
-  // серия дней (мягкая, без наказания)
-  const td = todayKey();
-  if (P.lastDay !== td) {
-    const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
-    P.streak = (P.lastDay === y) ? P.streak + 1 : 1; P.lastDay = td;
-  }
-  saveP();
-  const after = unlockedRewards().map(r => r.id);
-  const gained = REWARDS.find(r => r.id === after[after.length - 1] && !before.includes(r.id));
-  return gained;
-}
 
-/* ======================= РЕКОРДЫ ======================= */
-const best = {};
-function loadBest() { try { Object.assign(best, JSON.parse(localStorage.getItem('jbest') || '{}')); } catch (e) {} if (tg && tg.CloudStorage) tg.CloudStorage.getItem('jbest', (err, v) => { if (!err && v) { try { Object.assign(best, JSON.parse(v)); paintBest(); } catch (e) {} } }); paintBest(); }
-function saveBest() { const s = JSON.stringify(best); try { localStorage.setItem('jbest', s); } catch (e) {} try { tg && tg.CloudStorage && tg.CloudStorage.setItem('jbest', s); } catch (e) {} paintBest(); }
-function paintBest() {
-  const map = { schulte: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '', stroop: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '',
-    flash: k => best[k] ? '🏆 ' + best[k] + ' мс' : '', hidden: k => best[k] ? '🏆 ' + fmt(best[k]) + ' с' : '', memory: k => best[k] ? '🏆 ур. ' + best[k] : '' };
-  for (const g in map) { const v = map[g](g === 'schulte' ? 'schulte' + sN : g === 'stroop' ? 'stroop' + stMode : g); const el = $('b-' + g); if (el) el.textContent = v; }
-}
-
-/* ======================= НАВИГАЦИЯ ======================= */
-let current = 'home', againFn = null, sessionWins = 0;
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
-  current = id; window.scrollTo(0, 0);
-  if (tg && tg.BackButton) (id === 'home' || id === 'welcome') ? tg.BackButton.hide() : tg.BackButton.show();
-}
-if (tg && tg.BackButton) tg.BackButton.onClick(() => { stopAll(); goHome(); });
-document.querySelectorAll('[data-home]').forEach(b => b.onclick = () => { stopAll(); goHome(); });
-function goHome() { show('home'); renderHome(); paintBest(); }
-document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { haptic(); tryStart(b.dataset.go); });
-$('signup').onclick = e => { e.preventDefault(); const url = 'https://vk.me/uniqmindengels'; tg && tg.openLink ? tg.openLink(url) : window.open(url); };
-$('r-again').onclick = () => againFn && againFn();
-let timers = [];
-function stopAll() { timers.forEach(t => { clearInterval(t); clearTimeout(t); }); timers = []; }
-function tryStart(g) {
-  if (sessionWins >= 3) { speak('Джонни устал и идёт гулять. Приходи завтра!'); show('break'); return; }
-  start(g);
-}
-function start(g) { stopAll(); ({ schulte: startSchulte, stroop: startStroop, flash: prepFlash, hidden: startHidden, memory: prepMemory, tongue: startTongue })[g](); show(g); }
-
-/* ======================= ФИНАЛ раунда -> XP + награды ======================= */
-const XP_BASE = { schulte: 8, stroop: 6, flash: 8, hidden: 6, memory: 6, tongue: 5 };
-function finish(gameId, title, text, stars, bestLine, again) {
-  stopAll();
-  let xp = (XP_BASE[gameId] || 5) + stars * 4;
-  if (gameId === 'memory') xp = 4 + (mLvl * 2);
-  const gained = addXP(xp, gameId);
-  sessionWins++;
-  if (sessionWins >= 3) speak('Молодец! Но Джонни хочет отдохнуть.');
-  else speak(stars >= 3 ? 'Ура! Ты молодец!' : stars === 2 ? 'Хорошо, получается!' : 'Неплохо, попробуем ещё!');
-  $('r-stars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-  $('r-title').textContent = title; $('r-text').textContent = text; $('r-best').textContent = bestLine || '';
-  $('r-xp').textContent = '+' + xp + ' XP';
-  const rp = $('r-reward');
-  if (gained) { rp.style.display = 'block'; rp.innerHTML = 'Новая награда для Джонни: ' + gained.em + ' ' + gained.nm; }
-  else rp.style.display = 'none';
-  againFn = (sessionWins >= 3) ? goHome : again;
-  $('r-again').textContent = sessionWins >= 3 ? 'Достаточно на сегодня' : 'Ещё раз';
-  haptic('ok'); show('result');
-}
-
-/* ======================= ONBOARDING ======================= */
-let wAge = '4-6';
-$('w-age').querySelectorAll('button').forEach(b => b.onclick = () => {
-  $('w-age').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); wAge = b.dataset.age;
-});
-$('w-go').onclick = () => {
-  P.name = ($('w-name').value || '').trim() || 'друг'; P.age = wAge; saveP();
-  if (P.age === '6-8') { sN = 4; stMode = 'color'; } else { sN = 3; stMode = 'day'; }
-  speak('Привет, ' + P.name + '! Давай играть с Джонни!');
-  show('home'); renderHome();
+const FRIENDS={
+ pulya:{n:"Пуля",e:"",h:"Привет! Я Пуля! Я всё вижу с высоты!"},
+ sova:{n:"Бабушка Сова",e:"",h:"Здравствуй. Я Бабушка Сова. У меня много историй."},
+ top:{n:"Топ",e:"",h:"Я Топ! Я всё могу принести!"},
+ shur:{n:"Шур",e:"",h:"М-м-м… Я Шур. Я люблю слушать."},
+ ryzh:{n:"Рыж",e:"",h:"Привет. Я Рыж. Я знаю все тропинки."}
 };
 
-/* ======================= Настройки профиля ======================= */
-$('t-settings').onclick = () => { $('w-name').value = P.name || ''; $('w-age').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.age === (P.age || '4-6'))); wAge = P.age || '4-6'; show('welcome'); };
-$('t-sound').onclick = () => { soundOn = !soundOn; P.sound = soundOn; saveP(); $('t-sound').textContent = soundOn ? '🔊' : '🔇'; if (!soundOn) try { speechSynthesis.cancel(); } catch (e) {} };
+const GAMES=[
+ {id:"shulte",n:"Таблица Шульте",e:"",d:"Найди числа по порядку"},
+ {id:"colors",n:"Раскрась по цифрам",e:"",d:"Клетки по порядку"},
+ {id:"sounds",n:"Звуки леса",e:"",d:"Угадай, кто звучит"},
+ {id:"memory",n:"Что пропало",e:"",d:"Найди исчезнувший предмет"},
+ {id:"words",n:"Собери слово",e:"",d:"Буквы перепутались"}
+];
 
-/* ======================= ГЛАВНАЯ ======================= */
-function renderHome() {
-  $('h-hello').textContent = P.name ? 'Привет, ' + P.name + '!' : 'Привет! Я Джонни';
-  $('t-xp').textContent = P.xp; $('t-streak').textContent = P.streak || 0;
-  $('t-sound').textContent = soundOn ? '🔊' : '🔇';
-  const L = levelOf(P.xp); $('t-level').textContent = L.i + 1; $('t-zvanie').textContent = L.cur.name;
-  const from = L.cur.xp, to = L.next ? L.next.xp : L.cur.xp;
-  $('t-barfill').style.width = L.next ? Math.round((P.xp - from) / (to - from) * 100) + '%' : '100%';
-  $('t-xpnext').textContent = L.next ? ('До звания «' + L.next.name + '» ещё ' + (to - P.xp) + ' XP') : 'Максимальное звание!';
-  const rg = $('h-rewards'); rg.innerHTML = '';
-  const un = unlockedRewards().map(r => r.id);
-  REWARDS.slice(0, 6).forEach(r => {
-    const d = document.createElement('div');
-    const got = un.includes(r.id);
-    d.className = 'rcard' + (got ? '' : ' locked');
-    d.innerHTML = '<div class="em">' + r.em + '</div><div class="nm">' + r.nm + '</div>' + (got ? '' : '<div class="need">' + r.xp + ' XP</div>');
-    rg.appendChild(d);
-  });
-}
+/* ============================================================
+   СОСТОЯНИЕ
+   ============================================================ */
+let S={xp:0,lvl:1,unlocked:1,done:[],friends:[]};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("johnny")||"{}"))}catch(e){}
+const save=()=>localStorage.setItem("johnny",JSON.stringify(S));
 
-/* ======================= ВОЗРАСТНАЯ СЛОЖНОСТЬ ======================= */
-function isYoung() { return (P.age || '4-6') === '4-6'; }
-
-/* ===== Шульте ===== */
-let sN = 4, sNext = 1, sStart = 0;
-$('s-size').querySelectorAll('button').forEach(b => b.onclick = () => {
-  $('s-size').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); sN = +b.dataset.n; startSchulte();
-});
-function startSchulte() {
-  stopAll(); sNext = 1; sStart = 0; $('s-next').textContent = 1; $('s-time').textContent = '0,0';
-  const g = $('s-grid'); g.className = 'sgrid n' + sN; g.style.gridTemplateColumns = `repeat(${sN},1fr)`; g.innerHTML = '';
-  shuffle([...Array(sN * sN)].map((_, i) => i + 1)).forEach(n => {
-    const b = document.createElement('button'); b.textContent = n; b.style.background = COLORS[rnd(4)];
-    b.onclick = () => {
-      if (n !== sNext) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); haptic('bad'); speak('Попробуй ещё раз'); return; }
-      haptic(); if (sNext === 1) { speak('Найди число один'); timers.push(setInterval(() => $('s-time').textContent = fmt(Date.now() - sStart), 100)); }
-      b.classList.add('done'); sNext++;
-      if (!isYoung() && sNext <= sN * sN) speak('Найди число ' + sNext);
-      if (sNext > sN * sN) {
-        const ms = Date.now() - sStart, key = 'schulte' + sN, rec = !best[key] || ms < best[key];
-        if (rec) { best[key] = ms; saveBest(); }
-        const norm = isYoung() ? { 3: [12000, 20000], 4: [28000, 45000], 5: [50000, 80000] }[sN] : { 3: [8000, 15000], 4: [20000, 35000], 5: [35000, 60000] }[sN];
-        const st = ms < norm[0] ? 3 : ms < norm[1] ? 2 : 1;
-        finish('schulte', rec ? 'Новый рекорд!' : 'Молодец!', `Таблица ${sN}×${sN} за ${fmt(ms)} секунды.`, st, `Твой рекорд: ${fmt(best[key])} с`, () => { start('schulte'); });
-      } else $('s-next').textContent = sNext;
-    };
-    g.appendChild(b);
-  });
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.s===id));
+  window.scrollTo(0,0);
+  if(id==="s-map")renderMap();
+  if(id==="s-friends")renderFriends();
 }
 
-/* ===== Струп ===== */
-let stMode = 'day', stI = 0, stStart = 0, stErr = 0, stCur = null;
-const COLORS = ['#FBE3D2', '#DDEFE9', '#FBF1CC', '#ECE4F3'];
-const CW = [['КРАСНЫЙ', '#E0604F'], ['СИНИЙ', '#2F7FB5'], ['ЗЕЛЁНЫЙ', '#3E8B4F'], ['ЖЁЛТЫЙ', '#E0A800']];
-$('st-mode').querySelectorAll('button').forEach(b => b.onclick = () => {
-  $('st-mode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); stMode = b.dataset.m; startStroop();
-});
-function startStroop() {
-  stopAll(); stI = 0; stErr = 0; stStart = 0; $('st-n').textContent = 0; $('st-time').textContent = '0,0';
-  $('st-mode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.m === stMode));
-  const ans = $('st-ans'); ans.innerHTML = '';
-  if (stMode === 'day') {
-    $('st-title').textContent = 'День — ночь';
-    $('st-rule').innerHTML = 'Видишь солнце — жми <b>«Ночь»</b>. Видишь луну — жми <b>«День»</b>. Наоборот!';
-    speak('Играем в день и ночь! Нажимай наоборот!');
-    [['День', 'moon'], ['Ночь', 'sun']].forEach(([t, v]) => { const b = document.createElement('button'); b.textContent = t; b.onclick = () => stAnswer(v, b); ans.appendChild(b); });
-  } else {
-    $('st-title').textContent = 'Цвет слова';
-    $('st-rule').innerHTML = 'Нажми на <b>цвет букв</b>, а не на то, что написано!';
-    speak('Нажимай на цвет букв, а не на то, что написано!');
-    CW.forEach(([, c]) => { const b = document.createElement('button'); b.className = 'dot'; b.style.background = c; b.onclick = () => stAnswer(c, b); ans.appendChild(b); });
-  }
-  stNextItem();
+function addXP(n){
+  S.xp+=n;
+  if(S.xp>=100){S.xp-=100;S.lvl++;say("ui_level_up")}
+  renderXP();save();
 }
-function stNextItem() {
-  const s = $('st-show');
-  if (stMode === 'day') { stCur = Math.random() < .5 ? 'sun' : 'moon'; s.className = 'show'; s.textContent = stCur === 'sun' ? '🌞' : '🌙'; }
-  else { const w = CW[rnd(4)]; let c; do { c = CW[rnd(4)]; } while (c === w); stCur = c[1]; s.className = 'show word'; s.textContent = w[0]; s.style.color = c[1]; }
-}
-function stAnswer(v, b) {
-  if (!stStart) { stStart = Date.now(); timers.push(setInterval(() => $('st-time').textContent = fmt(Date.now() - stStart), 100)); }
-  if (v !== stCur) { stErr++; b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); haptic('bad'); speak('Ой, это не то. Попробуй ещё раз'); return; }
-  haptic(); stI++; $('st-n').textContent = stI;
-  if (stI >= 20) {
-    const ms = Date.now() - stStart, key = 'stroop' + stMode, rec = stErr === 0 && (!best[key] || ms < best[key]);
-    if (rec) { best[key] = ms; saveBest(); }
-    const st = stErr === 0 && ms < 25000 ? 3 : stErr <= 2 ? 2 : 1;
-    finish('stroop', stErr === 0 ? 'Ни одной ошибки!' : 'Хорошо!', `20 ответов за ${fmt(ms)} с, ошибок: ${stErr}.`, st, best[key] ? `Рекорд без ошибок: ${fmt(best[key])} с` : 'Рекорд засчитывается, если ошибок нет', () => start('stroop'));
-  } else stNextItem();
+function renderXP(){
+  document.getElementById("lvl").textContent=S.lvl;
+  document.getElementById("xp").textContent=S.xp;
+  document.getElementById("xpMax").textContent=100;
+  document.getElementById("xpFill").style.width=S.xp+"%";
 }
 
-/* ===== слова ===== */
-const WORDS = ['КОТ', 'ДОМ', 'СОК', 'ЛЕС', 'МЯЧ', 'СЫР', 'ЛУК', 'ЖУК', 'ДУБ', 'МЁД', 'РЫБА', 'ЛИСА', 'СОВА', 'ГРИБ', 'ЛУНА', 'МОРЕ', 'РЕКА', 'ЗИМА', 'ЛОДКА', 'КНИГА', 'ШКОЛА', 'РУЧКА', 'БЕЛКА', 'ЁЖИК', 'ПОЕЗД', 'ЖИРАФ', 'АРБУЗ', 'ЗОНТ', 'ПЕНАЛ', 'ДЖОННИ', 'КОРЗИНА', 'БАБОЧКА', 'КАПУСТА', 'МОРКОВЬ'];
-function wordPool() { return isYoung() ? WORDS.filter(w => w.length <= 4) : WORDS; }
-function options(word) { const same = shuffle(WORDS.filter(w => w !== word && Math.abs(w.length - word.length) <= 1)); return shuffle([word, ...same.slice(0, 3)]); }
-
-/* ===== Быстрый глаз ===== */
-let fI = 0, fMs = 700, fBest = 9999;
-function prepFlash() { stopAll(); fI = 0; fMs = isYoung() ? 900 : 700; fBest = 9999; $('f-n').textContent = 0; $('f-ms').textContent = '—'; $('f-show').textContent = 'Готов?'; $('f-opts').innerHTML = ''; $('f-start').style.display = 'block'; speak('Успей прочитать слово и выбери его!'); }
-$('f-start').onclick = () => { $('f-start').style.display = 'none'; flashRound(); };
-function flashRound() {
-  const pool = wordPool(); const word = pool[rnd(pool.length)], o = $('f-opts'), s = $('f-show');
-  o.innerHTML = ''; s.textContent = '+'; $('f-ms').textContent = fMs + ' мс';
-  timers.push(setTimeout(() => {
-    s.textContent = word;
-    timers.push(setTimeout(() => {
-      s.textContent = '▒'.repeat(word.length);
-      options(word).forEach(w => {
-        const b = document.createElement('button'); b.textContent = w;
-        b.onclick = () => {
-          const ok = w === word; b.classList.add(ok ? 'ok' : 'bad'); haptic(ok ? 'ok' : 'bad');
-          o.querySelectorAll('button').forEach(x => x.onclick = null);
-          if (ok) { fBest = Math.min(fBest, fMs); fMs = Math.max(100, fMs - 70); } else { fMs = Math.min(1200, fMs + 100); [...o.children].find(x => x.textContent === word).classList.add('ok'); }
-          fI++; $('f-n').textContent = fI;
-          timers.push(setTimeout(() => {
-            if (fI >= 10) {
-              const res = fBest === 9999 ? null : fBest, rec = res && (!best.flash || res < best.flash);
-              if (rec) { best.flash = res; saveBest(); }
-              finish('flash', res ? 'Отличный глаз!' : 'Попробуй ещё!', res ? `Ты успел прочитать слово за ${res} миллисекунд!` : 'Слова мелькали слишком быстро. Давай ещё раз!', !res ? 1 : res <= 300 ? 3 : res <= 500 ? 2 : 1, best.flash ? `Рекорд: ${best.flash} мс` : '', () => { start('flash'); });
-            } else flashRound();
-          }, 700));
-        };
-        o.appendChild(b);
-      });
-    }, fMs));
-  }, 600));
+/* ============================================================
+   ОЗВУЧКА. Пока файлов нет — говорим текстом в msg.
+   Когда положите файл — код сам его подхватит.
+   ============================================================ */
+function say(name,text){
+  const m=document.getElementById("storyMsg")||document.getElementById("shulteMsg");
+  if(m&&text)m.textContent=" "+text;
+  // авто-подключение: new Audio("audio/"+name+".mp3").play()
+  console.log("[аудио-слот]",name);
 }
 
-/* ===== Слово-невидимка ===== */
-let hI = 0, hStart = 0, hErr = 0;
-const FILL = 'БВГДЖЗЙКЛМНПРСТФХЦЧШЩЭЮЯ';
-function startHidden() { stopAll(); hI = 0; hErr = 0; hStart = Date.now(); $('h-n').textContent = 0; timers.push(setInterval(() => $('h-time').textContent = fmt(Date.now() - hStart), 100)); speak('Среди букв спряталось слово. Какое?'); hiddenRound(); }
-function hiddenRound() {
-  const pool = wordPool(); const word = pool[rnd(pool.length)], len = (isYoung() ? 8 : 11) + Math.min(hI, 5), pad = len - word.length, left = 1 + rnd(pad - 1);
-  const r = n => [...Array(n)].map(() => FILL[rnd(FILL.length)]).join('');
-  $('h-row').textContent = r(left) + word + r(pad - left);
-  const o = $('h-opts'); o.innerHTML = '';
-  options(word).forEach(w => {
-    const b = document.createElement('button'); b.textContent = w;
-    b.onclick = () => {
-      if (w !== word) { hErr++; b.classList.add('bad'); haptic('bad'); return; }
-      b.classList.add('ok'); haptic('ok'); hI++; $('h-n').textContent = hI;
-      timers.push(setTimeout(() => {
-        if (hI >= 10) {
-          const ms = Date.now() - hStart, rec = !best.hidden || ms < best.hidden;
-          if (rec) { best.hidden = ms; saveBest(); }
-          finish('hidden', rec ? 'Новый рекорд!' : 'Все слова найдены!', `10 слов за ${fmt(ms)} с, ошибок: ${hErr}.`, hErr === 0 && ms < 40000 ? 3 : hErr <= 2 ? 2 : 1, `Рекорд: ${fmt(best.hidden)} с`, () => start('hidden'));
-        } else hiddenRound();
-      }, 450));
-    };
-    o.appendChild(b);
-  });
-}
+/* ============================================================
+   КАРТА
 
-/* ===== Память ===== */
-const EMOJI = ['🍎', '🐟', '🔑', '⭐', '🌞', '🌙', '🍄', '🎈', '🚲', '🏠', '📚', '🐸', '🍉', '⚽', '🎁', '🔔', '🥕', '🦋', '🐶', '🌳'];
-let mLvl = 1, mShown = [], mPhase = 'idle';
-function prepMemory() { stopAll(); mLvl = 1; memIdle(); }
-function memK() { return Math.min((isYoung() ? 1 : 2) + mLvl, 9); }
-function memIdle() {
-  mPhase = 'idle'; $('m-lvl').textContent = mLvl; $('m-k').textContent = memK();
-  $('m-rule').innerHTML = `Запомни <b>${memK()} картинки</b> за 5 секунд. Потом найди их среди других.`;
-  $('m-grid').innerHTML = ''; $('m-bar').firstElementChild.style.width = '100%'; $('m-btn').textContent = mLvl === 1 ? 'Начать' : 'Дальше'; $('m-btn').style.display = 'block';
-}
-$('m-btn').onclick = () => { if (mPhase === 'idle') memShow(); else if (mPhase === 'pick') memCheck(); };
-function memShow() {
-  mPhase = 'show'; $('m-btn').style.display = 'none'; speak('Запомни картинки!');
-  mShown = shuffle(EMOJI).slice(0, memK());
-  const g = $('m-grid'); g.innerHTML = '';
-  mShown.forEach(e => { const d = document.createElement('div'); d.textContent = e; g.appendChild(d); });
-  const bar = $('m-bar').firstElementChild, t0 = Date.now(), T = 5000;
-  timers.push(setInterval(() => { const p = Math.max(0, 1 - (Date.now() - t0) / T); bar.style.width = p * 100 + '%'; }, 50));
-  timers.push(setTimeout(memPick, T));
-}
-function memPick() {
-  stopAll(); mPhase = 'pick';
-  $('m-rule').innerHTML = `Нажми на <b>${memK()} картинки</b>, которые ты видел.`;
-  const extra = shuffle(EMOJI.filter(e => !mShown.includes(e))).slice(0, Math.max(12, memK() * 2) - memK());
-  const g = $('m-grid'); g.innerHTML = '';
-  shuffle([...mShown, ...extra]).forEach(e => { const b = document.createElement('button'); b.textContent = e; b.onclick = () => { haptic(); b.classList.toggle('sel'); }; g.appendChild(b); });
-  $('m-btn').textContent = 'Проверить'; $('m-btn').style.display = 'block';
-}
-function memCheck() {
-  const btns = [...$('m-grid').children]; let right = 0, wrong = 0;
-  btns.forEach(b => { const was = mShown.includes(b.textContent), sel = b.classList.contains('sel');
-    if (sel && was) { right++; b.classList.add('ok'); } else if (sel && !was) { wrong++; b.classList.add('miss'); } else if (!sel && was) b.classList.add('ok'); b.onclick = null; });
-  mPhase = 'done'; $('m-btn').style.display = 'none';
-  const perfect = right === mShown.length && wrong === 0; haptic(perfect ? 'ok' : 'bad');
-  timers.push(setTimeout(() => {
-    if (perfect) { if (!best.memory || mLvl > best.memory) { best.memory = mLvl; saveBest(); } mLvl++; memIdle(); $('m-rule').innerHTML = `Верно! Теперь <b>${memK()} картинки</b>. Справишься?`; }
-    else finish('memory', 'Отличная тренировка!', `Ты дошёл до уровня ${mLvl} и запомнил ${right} из ${mShown.length} картинок.`, mLvl >= 5 ? 3 : mLvl >= 3 ? 2 : 1, best.memory ? `Рекорд: уровень ${best.memory}` : '', () => start('memory'));
-  }, 1400));
-}
+[(doc_common_card_1)]
 
-/* ===== Скороговорки ===== */
-const TONGUE = ['Шла Саша по шоссе и сосала сушку.', 'На дворе трава, на траве дрова.', 'Ехал Грека через реку, видит Грека — в реке рак.',
-  'Шесть мышат в шалаше шуршат.', 'У ежа — ежата, у ужа — ужата.', 'Карл у Клары украл кораллы, а Клара у Карла украла кларнет.',
-  'Сшит колпак не по-колпаковски, вылит колокол не по-колоколовски.', 'От топота копыт пыль по полю летит.', 'Тридцать три корабля лавировали, лавировали, да не вылавировали.'];
-let tI = rnd(TONGUE.length);
-function startTongue() { $('t-text').textContent = TONGUE[tI]; speak(TONGUE[tI]); }
-$('t-self').onclick = () => { const g = addXP(5, 'tongue'); sessionWins++; saveP(); haptic('ok'); speak('Умница!'); if (sessionWins >= 3) { show('break'); } else { $('t-text').textContent = 'Молодец! +' + 5 + ' XP 🎉'; } };
-$('t-next').onclick = () => { haptic(); tI = (tI + 1) % TONGUE.length; startTongue(); };
-
-/* ======================= QR-DEEP LINK =======================
-   Ссылка вида: ?g=schulte&n=3  или  ?lesson=1&task=4  (для QR в тетради) */
-const TASK_MAP = { '1-4': 'schulte', '1-5': 'memory', '1-2': 'memory', '2-6': 'stroop', '3-7': 'flash', '4-1': 'memory', '4-2': 'hidden', '5-1': 'schulte', '5-6': 'hidden', '6-4': 'stroop' };
-function deepLink() {
-  const q = new URLSearchParams(location.search);
-  let g = q.get('g');
-  if (!g && q.get('lesson') && q.get('task')) g = TASK_MAP[q.get('lesson') + '-' + q.get('task')] || 'schulte';
-  const n = q.get('n'); if (n) { sN = +n; }
-  if (g && window['start'] ) { tryStart(g); }
-}
-
-/* ======================= СТАРТ ======================= */
-loadP(); soundOn = P.sound !== false;
-loadBest();
-if (!P.name) { show('welcome'); } else {
-  if (P.age === '6-8') { sN = 4; stMode = 'color'; } else { sN = 3; stMode = 'day'; }
-  show('home'); renderHome();
-  const qg = new URLSearchParams(location.search);
-  if (!(qg.get('g') || qg.get('lesson'))) speak('Привет! Давай играть с Джонни!');
-}
-deepLink();
-</script>
-</body>
-</html>
+---
+代码还没发完，稍等，我继续把剩余部分补全。
+<websource>inline_action_reply_1</websource>
